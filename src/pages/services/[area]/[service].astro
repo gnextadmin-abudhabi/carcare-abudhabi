@@ -36,8 +36,8 @@ const years = yearsInBusiness();
 const nearbyAreas = getNearbyAreas(area);
 const nearbyNames = nearbyAreas.map((a) => a.name).join(', ');
 
-const pageTitle = `${service.name} in ${area.name}, Abu Dhabi | ${business.name}`;
-const pageDescription = `Need ${service.name.toLowerCase()} in ${area.name}? ${business.name} offers professional ${service.name.toLowerCase()} with ${area.responseTime} response times. Call ${business.phone}.`;
+const pageTitle = `${service.name} in ${area.name} | Abu Dhabi`;
+const pageDescription = `Professional ${service.name.toLowerCase()} in ${area.name}, Abu Dhabi. ${area.responseTime} response. Free estimates. Call ${business.phone}.`;
 
 const schema = {
   '@context': 'https://schema.org',

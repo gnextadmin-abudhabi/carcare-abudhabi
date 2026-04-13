@@ -25,10 +25,8 @@ const { service } = Astro.props;
 
 const homeBase = getAreaBySlug('mohamed-bin-zayed-city')!;
 
-const pageTitle = `${service.name} in Abu Dhabi | ${business.name}`;
-const metaDescription = service.description.length > 155
-  ? service.description.slice(0, 152) + '...'
-  : service.description;
+const pageTitle = `${service.name} Abu Dhabi | ${business.shortName}`;
+const metaDescription = `Professional ${service.name.toLowerCase()} in Abu Dhabi. Trusted since 1999. Fast service, free quotes. Call ${business.phone} — open 9AM–11:45PM daily.`;
 
 const schema = {
   '@context': 'https://schema.org',

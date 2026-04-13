@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { Icon } from 'astro-icon/components';
 import { getCollection } from 'astro:content';
-import { business } from '../../data/business';
+import { business, yearsInBusiness } from '../../data/business';
 
 const posts = (await getCollection('blog')).sort(
   (a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
@@ -18,8 +18,8 @@ const categoryColors: Record<string, string> = {
 ---
 
 <BaseLayout
-  title={`Car Care Blog Abu Dhabi | ${business.name}`}
-  description={`Car care tips, tyre advice, AC maintenance guides, and auto service insights for Abu Dhabi car owners from ${business.name} — trusted since ${business.yearEstablished}.`}
+  title={`Car Care Tips Abu Dhabi | Auto Service Blog`}
+  description={`Expert car care tips, tyre advice & AC maintenance guides for Abu Dhabi drivers. Learn from Al Sham Palace Auto Car Service — ${yearsInBusiness()}+ years experience.`}
 >
   <Breadcrumbs crumbs={[{ label: 'Blog' }]} />
 
