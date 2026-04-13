@@ -40,6 +40,11 @@ export interface Business {
   taglineAr?: string;
   descriptionAr?: string;
   whatsapp?: string;
+  social?: {
+    instagram?: string;
+    facebook?: string;
+    tiktok?: string;
+  };
 }
 
 export const business: Business = {
@@ -53,7 +58,7 @@ export const business: Business = {
   phone: '050 344 8933',
   phoneHref: 'tel:+971503448933',
   email: 'alshamcarcare@gmail.com',
-  website: 'https://carcarabudhabi.com',
+  website: 'https://carcareabudhabi.com',
   license: 'Abu Dhabi Trade License',
   yearEstablished: 1999,
   serviceRadius: 'Abu Dhabi and surrounding areas',
@@ -79,6 +84,10 @@ export const business: Business = {
   descriptionAr:
     'قصر الشام للعناية بالسيارات هو مركز الخدمة الشاملة الأكثر ثقة في أبوظبي، نعمل منذ عام 1999.',
   whatsapp: '971503448933',
+  social: {
+    instagram: 'https://www.instagram.com/al_sham_palace1/',
+    tiktok: 'https://www.tiktok.com/@alsham.palace1',
+  },
 };
 
 export function yearsInBusiness(): number {

@@ -10,7 +10,30 @@
       "Bash(curl:*)",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(t[''''path'''']\\) for t in d.get\\(''''tree'''',[]\\) if t[''''type'''']==''''blob'''']\")",
       "Bash(gh api:*)",
-      "Bash(python3 -c \"import sys,json,base64; d=json.load\\(sys.stdin\\); print\\(base64.b64decode\\(d[''''content'''']\\).decode\\(\\)\\)\")"
+      "Bash(python3 -c \"import sys,json,base64; d=json.load\\(sys.stdin\\); print\\(base64.b64decode\\(d[''''content'''']\\).decode\\(\\)\\)\")",
+      "Bash(gh auth:*)",
+      "Bash(ssh -T git@github.com)",
+      "Read(//Users/apple/.ssh/**)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''Exists:'''', d.get\\(''''full_name'''', d.get\\(''''message''''\\)\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''Permissions:'''', d.get\\(''''permissions''''\\)\\)\")",
+      "Bash(npx wrangler:*)",
+      "Bash(find \"/Users/apple/Desktop/Al Sham Palce Accesories/src/pages\" -type f -exec ls -lh {})",
+      "Bash(find src/components -type f -exec ls -lh {})",
+      "Bash(python3 -c \"import sys,json; print\\(json.dumps\\(json.load\\(sys.stdin\\), indent=2\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(z[''''name''''], z[''''id''''], z[''''status'''']\\) for z in d[''''result'''']]\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(r[''''type''''], r[''''name''''], r.get\\(''''content'''',''''''''\\)\\) for r in d[''''result'''']]\")",
+      "Bash(CLOUDFLARE_API_TOKEN=cfut_sNzfFIILMQJLSkj3lBfgIDk15EdzqcvrHfOoDzuJc4469533 CLOUDFLARE_ACCOUNT_ID=5a69cf4e3be03c59430858bb834ca07e npx wrangler pages deploy dist --project-name carcare-abudhabi --commit-dirty=true)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''Success:'''', d[''''success''''], d.get\\(''''errors'''',''''''''\\)\\)\")",
+      "Bash(CLOUDFLARE_API_TOKEN=cfut_UtweNdwfmwYg4qOoIlcwp5nJ5wjvktMoyiD8wW8ge6ca944c CLOUDFLARE_ACCOUNT_ID=5a69cf4e3be03c59430858bb834ca07e npx wrangler pages deploy dist --project-name carcare-abudhabi --commit-dirty=true)",
+      "Bash(CLOUDFLARE_API_TOKEN=cfut_UtweNdwfmwYg4qOoIlcwp5nJ5wjvktMoyiD8wW8ge6ca944c CLOUDFLARE_ACCOUNT_ID=5a69cf4e3be03c59430858bb834ca07e npx wrangler pages deploy dist --project-name carcareabudhabi --commit-dirty=true)",
+      "Bash(CLOUDFLARE_API_TOKEN=cfut_UtweNdwfmwYg4qOoIlcwp5nJ5wjvktMoyiD8wW8ge6ca944c npx wrangler pages deploy dist --project-name carcareabudhabi --account-id 5a69cf4e3be03c59430858bb834ca07e --commit-dirty=true)",
+      "Bash(ZONE_ID=\"a640adc2b612a5987e3e2732bf41a35a\" TOKEN=\"cfut_UtweNdwfmwYg4qOoIlcwp5nJ5wjvktMoyiD8wW8ge6ca944c\" __NEW_LINE_e86e8bb56345f9d1__ curl -s -X POST \"https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records\" -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: application/json\" --data '{\"\"\"\"type\"\"\"\":\"\"\"\"CNAME\"\"\"\",\"\"\"\"name\"\"\"\":\"\"\"\"carcareabudhabi.com\"\"\"\",\"\"\"\"content\"\"\"\":\"\"\"\"carcare-abudhabi.pages.dev\"\"\"\",\"\"\"\"proxied\"\"\"\":true}')",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''Root CNAME:'''', d[''''success''''], d.get\\(''''errors'''',''''''''\\)\\)\" __NEW_LINE_e86e8bb56345f9d1__ curl -s -X POST \"https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records\" -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: application/json\" --data '{\"\"\"\"type\"\"\"\":\"\"\"\"CNAME\"\"\"\",\"\"\"\"name\"\"\"\":\"\"\"\"www\"\"\"\",\"\"\"\"content\"\"\"\":\"\"\"\"carcare-abudhabi.pages.dev\"\"\"\",\"\"\"\"proxied\"\"\"\":true}')",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''WWW CNAME:'''', d[''''success''''], d.get\\(''''errors'''',''''''''\\)\\)\")",
+      "Bash(\"/Users/apple/Library/Preferences/.wrangler/config/default.toml\":*)",
+      "Bash(echo '{\"\"account\"\":{\"\"id\"\":\"\"9b4fbc25f9398ba7a45500eae293e517\"\",\"\"name\"\":\"\"Gnext.ind@gmail.com''''s Account\"\"}}')",
+      "Bash(\"/Users/apple/Desktop/Al Sham Palce Accesories/node_modules/.cache/wrangler/wrangler-account.json\")"
     ]
   }
 }

@@ -37,7 +37,17 @@ const ogImageUrl = new URL(ogImage || DEFAULT_OG_IMAGE, Astro.site).href;
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+<!-- Robots -->
+{noindex
+  ? <meta name="robots" content="noindex, nofollow" />
+  : <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+}
+
+<!-- Local / Geo Meta -->
+<meta name="geo.region" content="AE-AZ" />
+<meta name="geo.placename" content="Mohamed Bin Zayed City, Abu Dhabi, UAE" />
+<meta name="geo.position" content="24.3338632;54.5345258" />
+<meta name="ICBM" content="24.3338632, 54.5345258" />
 
 <!-- Open Graph -->
 <meta property="og:title" content={title} />

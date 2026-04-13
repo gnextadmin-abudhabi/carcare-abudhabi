@@ -1,48 +1,67 @@
 ---
-// No props needed - JS handles language toggling
+// Language toggle button — EN ↔ عر
+// Persists choice in localStorage, sets html[lang] + html[dir] + html.ar class
 ---
 
 <button
   id="lang-toggle"
-  class="lang-btn"
-  aria-label="Toggle Arabic/English language"
-  title="Switch to Arabic / التبديل إلى العربية"
+  type="button"
+  aria-label="Toggle language / تغيير اللغة"
+  class="group relative inline-flex h-9 w-[72px] shrink-0 items-center overflow-hidden rounded-full border border-white/15 bg-white/8 p-0.5 transition-all hover:border-brand-500/40 hover:bg-white/12"
 >
-  <span id="lang-icon">🌐</span>
-  <span id="lang-label">عربي</span>
+  <!-- Sliding highlight pill -->
+  <span
+    id="lang-pill"
+    class="absolute left-0.5 top-0.5 h-8 w-8 rounded-full bg-brand-500 shadow-md shadow-brand-500/30 transition-all duration-300 ease-in-out"
+  ></span>
+
+  <!-- EN label -->
+  <span
+    id="lang-en-label"
+    class="relative z-10 flex-1 text-center text-[11px] font-bold tracking-wide"
+  >EN</span>
+
+  <!-- AR label -->
+  <span
+    id="lang-ar-label"
+    class="relative z-10 flex-1 text-center text-[12px] font-bold"
+    style="font-family: 'Cairo', sans-serif;"
+  >عر</span>
 </button>
 
 <script>
-  const toggle = document.getElementById('lang-toggle');
-  const labelEl = document.getElementById('lang-label');
+  const toggle  = document.getElementById('lang-toggle') as HTMLButtonElement | null;
+  const pill    = document.getElementById('lang-pill')   as HTMLSpanElement | null;
+  const enLbl   = document.getElementById('lang-en-label') as HTMLSpanElement | null;
+  const arLbl   = document.getElementById('lang-ar-label') as HTMLSpanElement | null;
+  const root    = document.documentElement;
 
-  // Restore preference on load
-  const saved = localStorage.getItem('lang') ?? 'en';
-  applyLang(saved);
+  function applyLang(lang: 'en' | 'ar') {
+    const isAr = lang === 'ar';
 
-  toggle?.addEventListener('click', () => {
-    const current = document.documentElement.lang || 'en';
-    const next = current === 'en' ? 'ar' : 'en';
-    applyLang(next);
-    localStorage.setItem('lang', next);
-  });
+    // Set html attributes
+    root.setAttribute('lang', isAr ? 'ar' : 'en');
+    root.setAttribute('dir',  isAr ? 'rtl' : 'ltr');
+    root.classList.toggle('ar', isAr);
 
-  function applyLang(lang: string) {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-
-    if (labelEl) {
-      labelEl.textContent = lang === 'ar' ? 'English' : 'عربي';
+    // Slide pill
+    if (pill) {
+      pill.style.left  = isAr ? 'auto' : '2px';
+      pill.style.right = isAr ? '2px'  : 'auto';
     }
 
-    // Show/hide content blocks
-    document.querySelectorAll('[data-en]').forEach((el) => {
-      const htmlEl = el as HTMLElement;
-      htmlEl.style.display = lang === 'en' ? '' : 'none';
-    });
-    document.querySelectorAll('[data-ar]').forEach((el) => {
-      const htmlEl = el as HTMLElement;
-      htmlEl.style.display = lang === 'ar' ? '' : 'none';
-    });
+    // Label colours
+    if (enLbl) enLbl.style.color = isAr ? 'rgba(255,255,255,0.4)' : '#0d0d0d';
+    if (arLbl) arLbl.style.color = isAr ? '#0d0d0d'                : 'rgba(255,255,255,0.45)';
+
+    localStorage.setItem('alsham-lang', lang);
   }
+
+  // Restore saved preference on every page load
+  const saved = localStorage.getItem('alsham-lang') as 'en' | 'ar' | null;
+  applyLang(saved === 'ar' ? 'ar' : 'en');
+
+  toggle?.addEventListener('click', () => {
+    applyLang(root.classList.contains('ar') ? 'en' : 'ar');
+  });
 </script>

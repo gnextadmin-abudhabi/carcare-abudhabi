@@ -8,6 +8,7 @@ import { serviceUrl, areaUrl, contactUrl } from '../lib/urls';
 import { reviews } from '../data/seoContent';
 
 const years = yearsInBusiness();
+const avgRating = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -18,27 +19,42 @@ const schema = {
       url: business.website,
       name: business.name,
       description: business.description,
-      publisher: { '@id': `${business.website}/#business` },
+      inLanguage: ['en-AE', 'ar-AE'],
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: { '@type': 'EntryPoint', urlTemplate: `${business.website}/?s={search_term_string}` },
+        'query-input': 'required name=search_term_string',
+      },
     },
     {
-      '@type': 'AutoRepair',
+      '@type': ['AutoRepair', 'LocalBusiness'],
       '@id': `${business.website}/#business`,
       name: business.name,
+      alternateName: [business.shortName, business.nameAr],
       legalName: business.legalName,
       url: business.website,
-      telephone: business.phone,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${business.website}${business.logo}`,
+        width: 200,
+        height: 200,
+      },
+      image: [
+        { '@type': 'ImageObject', url: `${business.website}/images/hero.webp`, width: 1920, height: 1080 },
+        { '@type': 'ImageObject', url: `${business.website}${business.logo}`, width: 200, height: 200 },
+      ],
+      telephone: '+971503448933',
       email: business.email,
       description: business.description,
-      founder: {
-        '@type': 'Person',
-        name: business.owner,
-      },
       foundingDate: `${business.yearEstablished}`,
+      priceRange: 'AED',
+      currenciesAccepted: 'AED',
+      paymentAccepted: 'Cash, Credit Card, Debit Card',
       address: {
         '@type': 'PostalAddress',
         streetAddress: business.address.street,
         addressLocality: business.address.city,
-        addressRegion: business.address.state,
+        addressRegion: 'Abu Dhabi',
         addressCountry: 'AE',
       },
       geo: {
@@ -46,264 +62,209 @@ const schema = {
         latitude: business.coordinates.lat,
         longitude: business.coordinates.lng,
       },
-      openingHoursSpecification: [
-        {
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-          opens: '09:00',
-          closes: '23:45',
-        },
+      hasMap: 'https://maps.app.goo.gl/uDuBRuNgejb3Zjk37',
+      sameAs: [
+        'https://maps.app.goo.gl/uDuBRuNgejb3Zjk37',
+        'https://wa.me/971503448933',
+        'https://www.instagram.com/al_sham_palace1/',
+        'https://www.tiktok.com/@alsham.palace1',
       ],
-      areaServed: serviceAreas.map((area) => ({
-        '@type': 'City',
-        name: area.name,
-        containedInPlace: {
-          '@type': 'AdministrativeArea',
-          name: 'Abu Dhabi Emirate',
-        },
-      })),
-      hasOfferCatalog: {
-        '@type': 'OfferCatalog',
-        name: 'Auto Car Services',
-        itemListElement: serviceTypes.map((service) => ({
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Service',
-            name: service.name,
-            description: service.shortDescription,
-          },
-        })),
+      openingHoursSpecification: [{
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+        opens: '09:00',
+        closes: '23:45',
+      }],
+      serviceArea: {
+        '@type': 'GeoCircle',
+        geoMidpoint: { '@type': 'GeoCoordinates', latitude: business.coordinates.lat, longitude: business.coordinates.lng },
+        geoRadius: '40000',
       },
-    },
-    {
-      '@type': 'WebPage',
-      '@id': `${business.website}/#webpage`,
-      url: business.website,
-      name: `${business.name} | Abu Dhabi Car Service`,
-      isPartOf: { '@id': `${business.website}/#website` },
-      about: { '@id': `${business.website}/#business` },
-      description: business.description,
+      areaServed: serviceAreas.map((a) => ({
+        '@type': 'City',
+        name: a.name,
+        containedInPlace: { '@type': 'AdministrativeArea', name: 'Abu Dhabi Emirate' },
+      })),
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: avgRating,
+        reviewCount: reviews.length,
+        bestRating: '5',
+        worstRating: '1',
+      },
+      review: reviews.map((r) => ({
+        '@type': 'Review',
+        author: { '@type': 'Person', name: r.author },
+        reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: '5' },
+        reviewBody: r.text,
+        datePublished: r.date,
+        publisher: { '@type': 'Organization', name: 'Google' },
+      })),
     },
   ],
 };
+
+// Bilingual marquee items
+const marqueeItems = [
+  { en: 'Car Accessories',        ar: 'إكسسوارات السيارات' },
+  { en: 'Tyre Services',          ar: 'خدمات الإطارات' },
+  { en: 'AC Repair',              ar: 'إصلاح مكيف السيارة' },
+  { en: 'Mechanical Works',       ar: 'الأعمال الميكانيكية' },
+  { en: 'Electrical Works',       ar: 'الأعمال الكهربائية' },
+  { en: 'Battery Replacement',    ar: 'استبدال البطارية' },
+  { en: 'Home Service',           ar: 'خدمة منزلية' },
+  { en: 'Car Wash & Detailing',   ar: 'غسيل وتلميع السيارات' },
+  { en: '20+ Areas Served',       ar: '+20 منطقة نخدمها' },
+  { en: 'Since 1999',             ar: 'منذ 1999' },
+  { en: 'Free Estimates',         ar: 'تقدير مجاني' },
+];
+
+const howWeWorkSteps = [
+  { n: 1, icon: 'lucide:phone-call', en: 'Call or WhatsApp', ar: 'اتصل أو تواصل واتساب', bodyEn: 'Call 050 344 8933 or WhatsApp us. Describe your issue and get an upfront quote instantly.', bodyAr: 'اتصل بـ 050 344 8933 أو أرسل واتساب. صف المشكلة واحصل على سعر فوري.' },
+  { n: 2, icon: 'lucide:truck',      en: 'We Come to You',   ar: 'نأتي إليك',             bodyEn: 'Our mobile team reaches your home or office across Abu Dhabi — or visit our MBZ City workshop.', bodyAr: 'فريقنا المتنقل يصل إلى منزلك أو مكتبك في أبوظبي — أو زر ورشتنا في مدينة محمد بن زايد.' },
+  { n: 3, icon: 'lucide:wrench',     en: 'Expert Service',   ar: 'خدمة احترافية',         bodyEn: 'Certified technicians fix your car right the first time using quality parts and proper tools.', bodyAr: 'فنيون معتمدون يصلحون سيارتك بشكل صحيح من المرة الأولى بأجود القطع.' },
+  { n: 4, icon: 'lucide:check-circle', en: 'Done & Delivered', ar: 'اكتمل وتسليم',       bodyEn: 'Car handed back in top condition. The price quoted is the price paid. Zero hidden charges.', bodyAr: 'سيارتك بحالة ممتازة. السعر المتفق عليه هو السعر المدفوع. لا رسوم خفية.' },
+];
+
+const whyBullets = [
+  { en: `${years}+ years of trusted car care across Abu Dhabi`,   ar: `${years}+ سنة من الخدمة الموثوقة في أبوظبي` },
+  { en: 'Mobile home service — we come to you',                    ar: 'خدمة منزلية متنقلة — نأتي إليك' },
+  { en: 'Open daily 9AM to 11:45PM including weekends',            ar: 'مفتوح يومياً من 9 صباحاً حتى 11:45 مساءً بما في ذلك الإجازات' },
+  { en: 'Upfront pricing — no hidden charges, ever',               ar: 'أسعار واضحة — لا رسوم خفية أبداً' },
+  { en: 'Emergency tyre & battery service available',              ar: 'خدمة طوارئ للإطارات والبطاريات متاحة' },
+];
+
+const statsData = [
+  { value: `${years}+`, icon: 'lucide:calendar', en: 'Years in Business',  ar: 'سنة في الخدمة' },
+  { value: '20+',       icon: 'lucide:map-pin',  en: 'Areas Covered',      ar: 'منطقة مغطاة' },
+  { value: '8',         icon: 'lucide:wrench',   en: 'Services Offered',   ar: 'خدمة متوفرة' },
+  { value: avgRating,   icon: 'lucide:star',     en: 'Average Rating',     ar: 'متوسط التقييم' },
+];
 ---
 
 <BaseLayout
-  title={`${business.name} | Abu Dhabi Car Service Since 1999`}
+  title={`Car Service Abu Dhabi | ${business.shortName} Since ${business.yearEstablished}`}
   description={business.description}
   schema={schema}
 >
-  <!-- ============ HERO ============ -->
-  <section class="relative overflow-hidden bg-gradient-to-br from-brand-900 to-brand-800">
-    <!-- Background hero image -->
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════ -->
+  <section class="relative min-h-[92vh] overflow-hidden bg-dark-900 flex items-center">
+    <!-- Hero background photo -->
     <div class="absolute inset-0">
       <img
         src="/images/hero.webp"
-        alt="Al Sham Palace Auto Car Service Abu Dhabi"
-        class="h-full w-full object-cover opacity-20"
-        width="2048"
-        height="1024"
+        alt="Al Sham Palace Auto Car Service workshop — Mohamed Bin Zayed City, Abu Dhabi, UAE (lat 24.3917, lng 54.4993)"
+        class="h-full w-full object-cover object-center"
+        width="1920" height="1080"
         loading="eager"
+        decoding="async"
       />
+      <!-- Dark overlay so text remains readable -->
+      <div class="absolute inset-0 bg-dark-900/75"></div>
     </div>
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(245,166,35,0.15),_transparent_70%)]" />
-
-    <div class="relative mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
-      <div class="max-w-2xl animate-fade-up">
-        <h1 class="font-display text-4xl text-white sm:text-5xl lg:text-6xl">
-          Abu Dhabi's Most Trusted Car Service Since 1999
-        </h1>
-        <p class="mt-6 text-lg leading-relaxed text-brand-200">
-          {business.tagline}. Car accessories, tyres, AC repair, mechanical &amp; electrical works, and mobile home service across all Abu Dhabi areas — backed by {years}+ years of experience.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-4">
-          <a
-            href={business.phoneHref}
-            class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-brand-950 shadow-lg transition-all hover:bg-amber-400 hover:shadow-xl"
-          >
-            <Icon name="lucide:phone" class="size-5" />
-            Call {business.phone}
-          </a>
-          <a
-            href="https://wa.me/971503448933"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20"
-          >
-            <Icon name="lucide:message-circle" class="size-5" />
-            WhatsApp Us
-          </a>
-        </div>
-      </div>
+    <!-- Gradient mesh on top of photo -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute -top-32 -right-32 size-[600px] rounded-full bg-brand-500/10 blur-[120px]"></div>
+      <div class="absolute top-1/2 -left-40 size-[500px] rounded-full bg-brand-600/8 blur-[100px]"></div>
+      <div class="absolute bottom-0 right-1/4 size-[400px] rounded-full bg-amber-500/6 blur-[90px]"></div>
     </div>
-  </section>
+    <!-- Grid pattern -->
+    <div class="absolute inset-0 pointer-events-none opacity-30"
+      style="background-image:linear-gradient(rgba(245,166,35,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,0.05) 1px,transparent 1px);background-size:60px 60px;"></div>
+    <!-- Diagonal cut -->
+    <div class="absolute bottom-0 left-0 right-0 h-24 bg-dark-800" style="clip-path:polygon(0 100%,100% 100%,100% 0)"></div>
 
-  <!-- ============ STATS BAR ============ -->
-  <section class="bg-brand-950">
-    <div class="mx-auto grid max-w-7xl grid-cols-2 gap-px sm:grid-cols-4">
-      {[
-        { icon: 'lucide:award', label: `${years}+ Years Experience` },
-        { icon: 'lucide:home', label: 'Home Service Available' },
-        { icon: 'lucide:clock', label: 'Open Daily 9AM–11:45PM' },
-        { icon: 'lucide:map-pin', label: 'All Abu Dhabi Areas' },
-      ].map((stat) => (
-        <div class="flex items-center justify-center gap-3 bg-brand-950 px-4 py-5">
-          <Icon name={stat.icon} class="size-5 shrink-0 text-amber-400" />
-          <span class="text-sm font-medium text-white">{stat.label}</span>
-        </div>
-      ))}
-    </div>
-  </section>
+    <div class="relative mx-auto max-w-7xl px-5 py-24 lg:px-8 lg:py-32">
+      <div class="grid gap-16 lg:grid-cols-2 lg:items-center">
 
-  <!-- ============ SERVICES GRID ============ -->
-  <section class="py-16 lg:py-24">
-    <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="text-center">
-        <h2 class="font-display text-3xl text-brand-900 sm:text-4xl">
-          Our Car Services in Abu Dhabi
-        </h2>
-        <p class="mx-auto mt-4 max-w-2xl text-stone-600">
-          From car accessories and tyres to AC repair, mechanical works, and mobile home service — we handle everything your car needs across all Abu Dhabi areas.
-        </p>
-      </div>
+        <!-- Left: copy -->
+        <div class="animate-fade-up">
+          <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-500/25 bg-brand-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-400">
+            <span class="size-1.5 rounded-full bg-brand-400 animate-pulse"></span>
+            <span class="en-text">Trusted Since {business.yearEstablished} · Abu Dhabi</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">موثوق منذ {business.yearEstablished} · أبوظبي</span>
+          </div>
 
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {serviceTypes.map((service, i) => (
-          <a
-            href={serviceUrl(service.slug)}
-            class={`card-hover group relative rounded-xl border border-stone-200 bg-white p-6 animate-fade-up stagger-${Math.min(i + 1, 6)}`}
-          >
-            {service.emergency && (
-              <span class="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
-                <Icon name="lucide:zap" class="size-3" />
-                24/7
-              </span>
-            )}
-            <div class="flex size-12 items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-100">
-              <Icon name={service.icon} class="size-6" />
+          <h1 class="font-display text-5xl leading-[1.1] text-white sm:text-6xl lg:text-7xl">
+            <span class="en-text block">Abu Dhabi's&nbsp;<span class="text-gradient-gold">Most Trusted</span><br />Car Service</span>
+            <span class="ar-text block" style="font-family:'Cairo',sans-serif;line-height:1.3">
+              <span class="text-gradient-gold">الأكثر موثوقية</span><br />في أبوظبي<br /><span style="font-size:0.8em;color:#a8a29e">لخدمة السيارات</span>
+            </span>
+          </h1>
+
+          <p class="mt-6 max-w-lg text-lg leading-relaxed text-stone-400">
+            <span class="en-text">{business.tagline}. Car accessories, tyres, AC repair, mechanical &amp; electrical works — mobile home service across all Abu Dhabi areas.</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">إكسسوارات سيارات، إطارات، إصلاح مكيف هواء، أعمال ميكانيكية وكهربائية — خدمة منزلية متنقلة في جميع مناطق أبوظبي.</span>
+          </p>
+
+          <div class="mt-10 flex flex-wrap gap-4">
+            <a href={business.phoneHref} class="group relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-brand-500 px-7 py-4 text-sm font-bold text-dark-900 shadow-2xl shadow-brand-500/30 transition-all hover:bg-brand-400 hover:-translate-y-1 hover:shadow-brand-500/50">
+              <Icon name="lucide:phone" class="size-5 shrink-0 transition-transform group-hover:rotate-12" />
+              <span class="en-text">Call {business.phone}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">اتصل {business.phone}</span>
+            </a>
+            <a href="https://wa.me/971503448933" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-3 rounded-2xl border border-[#25D366]/30 bg-[#25D366]/10 px-7 py-4 text-sm font-bold text-[#25D366] transition-all hover:bg-[#25D366]/20 hover:-translate-y-1 hover:border-[#25D366]/50">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="size-5 shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              <span class="en-text">WhatsApp Us</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">تواصل واتساب</span>
+            </a>
+          </div>
+
+          <!-- Rating row -->
+          <div class="mt-8 flex items-center gap-3">
+            <div class="flex gap-0.5">
+              {[1,2,3,4,5].map(() => (
+                <svg class="size-5 fill-brand-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              ))}
             </div>
-            <h3 class="mt-4 font-display text-lg text-brand-900">
-              {service.name}
-            </h3>
-            <p class="mt-2 text-sm leading-relaxed text-stone-600">
-              {service.shortDescription}
-            </p>
-            <p class="mt-3 text-sm font-semibold text-brand-700">
-              From AED {service.priceRange.min}
-            </p>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+            <span class="text-sm font-bold text-white">{avgRating}</span>
+            <span class="text-stone-600">·</span>
+            <span class="text-sm text-stone-400">
+              <span class="en-text">{reviews.length} verified reviews</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{reviews.length} تقييم موثق</span>
+            </span>
+          </div>
+        </div>
 
-  <!-- ============ HOW WE WORK ============ -->
-  <section class="bg-brand-950 py-16 lg:py-24" id="how-we-work">
-    <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="text-center">
-        <span class="inline-flex items-center gap-2 rounded-full bg-brand-900 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-brand-300">
-          <Icon name="lucide:settings" class="size-3.5" />
-          Simple Process
-        </span>
-        <h2 class="mt-4 font-display text-3xl text-white sm:text-4xl">
-          How We Work
-        </h2>
-        <p class="mx-auto mt-4 max-w-2xl text-brand-300">
-          From your first call to the job being done, we keep everything simple and transparent. Here is what to expect when you contact Al Sham Palace.
-        </p>
-      </div>
-
-      <div class="mt-14 lg:flex lg:gap-10">
-        <div class="flex gap-2 overflow-x-auto pb-4 lg:w-80 lg:shrink-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:pb-0">
-          {[
-            {
-              step: 1,
-              title: 'Call or WhatsApp',
-              icon: 'lucide:phone-call',
-              summary: 'Describe your car issue and we will advise the best solution.',
-              detail: 'Call or WhatsApp 050 344 8933. Tell us what your car needs — we will tell you the cost upfront and schedule a visit or home service at your convenience.',
-              image: '/images/hero.webp',
-            },
-            {
-              step: 2,
-              title: 'We Come to You',
-              icon: 'lucide:truck',
-              summary: 'Our mobile team arrives at your home, office, or our workshop.',
-              detail: 'For home service, our fully-equipped mobile technician arrives at your location across Abu Dhabi. For workshop jobs, bring your car to us in Mohamed Bin Zayed City.',
-              image: '/images/hero.webp',
-            },
-            {
-              step: 3,
-              title: 'Expert Service',
-              icon: 'lucide:wrench',
-              summary: 'Certified technicians fix your car right the first time.',
-              detail: 'Our experienced mechanics and technicians diagnose and resolve the issue using quality parts and proper tools. Most jobs are completed the same day.',
-              image: '/images/hero.webp',
-            },
-            {
-              step: 4,
-              title: 'Done & Delivered',
-              icon: 'lucide:check-circle',
-              summary: 'Your car is ready — with no hidden charges.',
-              detail: 'We test everything, explain what was done, and hand your car back in top condition. The price we quoted is the price you pay. No surprises, ever.',
-              image: '/images/hero.webp',
-            },
-          ].map((item, i) => (
-            <button
-              type="button"
-              class={`hww-tab group flex w-64 shrink-0 items-start gap-4 rounded-xl px-5 py-4 text-left transition-all lg:w-full ${i === 0 ? 'bg-brand-800/80 ring-1 ring-brand-600/40' : 'hover:bg-brand-900'}`}
-              data-step={item.step}
-              data-title={item.title}
-              data-detail={item.detail}
-              data-image={item.image}
-            >
-              <div class={`flex size-10 shrink-0 items-center justify-center rounded-lg transition-colors ${i === 0 ? 'bg-amber-500 text-brand-950' : 'bg-brand-800 text-brand-400 group-hover:bg-brand-700'}`}>
-                <Icon name={item.icon} class="size-5" />
+        <!-- Right: logo + stat pills -->
+        <div class="animate-fade-up stagger-2 flex flex-col items-center gap-6">
+          <div class="relative">
+            <div class="absolute -inset-3 rounded-3xl bg-gradient-to-br from-brand-500/20 to-transparent blur-2xl"></div>
+            <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-dark-800 p-2 shadow-2xl">
+              <img src="/images/logo.jpg" alt="Al Sham Palace Auto Car Service — Abu Dhabi"
+                class="h-64 w-64 rounded-2xl object-cover sm:h-80 sm:w-80" width="320" height="320" loading="eager" />
+            </div>
+            <div class="absolute -bottom-4 -right-4 flex items-center gap-2 rounded-2xl border border-white/10 bg-dark-800 px-4 py-3 shadow-xl">
+              <div class="flex size-10 items-center justify-center rounded-xl bg-brand-500/15">
+                <Icon name="lucide:award" class="size-5 text-brand-400" />
               </div>
               <div>
-                <div class="flex items-center gap-2">
-                  <span class={`text-xs font-bold ${i === 0 ? 'text-amber-400' : 'text-brand-500'}`}>Step {item.step}</span>
-                </div>
-                <h3 class={`mt-0.5 text-sm font-semibold ${i === 0 ? 'text-white' : 'text-brand-200'}`}>
-                  {item.title}
-                </h3>
-                <p class={`mt-1 text-xs leading-relaxed ${i === 0 ? 'text-brand-300' : 'text-brand-400'}`}>
-                  {item.summary}
+                <p class="text-xs text-stone-500">
+                  <span class="en-text">Experience</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">خبرة</span>
+                </p>
+                <p class="text-sm font-bold text-white">
+                  {years}+&nbsp;<span class="en-text">Years</span><span class="ar-text" style="font-family:'Cairo',sans-serif">سنة</span>
                 </p>
               </div>
-            </button>
-          ))}
-        </div>
-
-        <div class="mt-8 flex-1 lg:mt-0">
-          <div class="relative overflow-hidden rounded-2xl">
-            <img
-              id="hww-image"
-              src="/images/hero.webp"
-              alt="Step 1: Call or WhatsApp"
-              class="h-64 w-full object-cover sm:h-80 lg:h-96 transition-opacity duration-300"
-              width="1408"
-              height="768"
-            />
-            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-950/90 via-brand-950/60 to-transparent px-6 pb-6 pt-20 sm:px-8 sm:pb-8 sm:pt-28">
-              <div class="flex items-center gap-3">
-                <span class="flex size-8 items-center justify-center rounded-full bg-amber-500 text-sm font-bold text-brand-950" id="hww-step-num">1</span>
-                <h3 class="font-display text-xl text-white sm:text-2xl" id="hww-title">Call or WhatsApp</h3>
-              </div>
-              <p class="mt-3 max-w-xl text-sm leading-relaxed text-brand-200 sm:text-base" id="hww-detail">
-                Call or WhatsApp 050 344 8933. Tell us what your car needs — we will tell you the cost upfront and schedule a visit or home service at your convenience.
-              </p>
             </div>
           </div>
 
-          <div class="mt-4 flex items-center justify-center gap-2 lg:justify-start">
-            {[1, 2, 3, 4].map((n) => (
-              <button
-                type="button"
-                class={`hww-dot size-2.5 rounded-full transition-all ${n === 1 ? 'bg-amber-500 w-8' : 'bg-brand-700 hover:bg-brand-600'}`}
-                data-dot={n}
-                aria-label={`Go to step ${n}`}
-              />
+          <div class="flex flex-wrap justify-center gap-3">
+            {[
+              { icon: 'lucide:home',    en: 'Home Service',  ar: 'خدمة منزلية' },
+              { icon: 'lucide:clock',   en: '9AM – 11:45PM', ar: '9 ص – 11:45 م' },
+              { icon: 'lucide:map-pin', en: 'All Abu Dhabi', ar: 'كل أبوظبي' },
+            ].map((s) => (
+              <div class="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-stone-300">
+                <Icon name={s.icon} class="size-4 shrink-0 text-brand-400" />
+                <span class="en-text">{s.en}</span>
+                <span class="ar-text" style="font-family:'Cairo',sans-serif">{s.ar}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -311,174 +272,68 @@ const schema = {
     </div>
   </section>
 
-  <script>
-    const tabs = document.querySelectorAll<HTMLButtonElement>('.hww-tab');
-    const dots = document.querySelectorAll<HTMLButtonElement>('.hww-dot');
-    const image = document.getElementById('hww-image') as HTMLImageElement;
-    const stepNum = document.getElementById('hww-step-num');
-    const title = document.getElementById('hww-title');
-    const detail = document.getElementById('hww-detail');
 
-    function activateStep(step: number) {
-      const tab = Array.from(tabs).find(t => Number(t.dataset.step) === step);
-      if (!tab || !image || !stepNum || !title || !detail) return;
-
-      tabs.forEach(t => {
-        const isActive = t === tab;
-        t.classList.toggle('bg-brand-800/80', isActive);
-        t.classList.toggle('ring-1', isActive);
-        t.classList.toggle('ring-brand-600/40', isActive);
-        t.classList.toggle('hover:bg-brand-900', !isActive);
-
-        const icon = t.querySelector('div:first-child') as HTMLElement;
-        if (icon) {
-          icon.classList.toggle('bg-amber-500', isActive);
-          icon.classList.toggle('text-brand-950', isActive);
-          icon.classList.toggle('bg-brand-800', !isActive);
-          icon.classList.toggle('text-brand-400', !isActive);
-          icon.classList.toggle('group-hover:bg-brand-700', !isActive);
-        }
-
-        const stepLabel = t.querySelector('span:first-of-type') as HTMLElement;
-        if (stepLabel) {
-          stepLabel.classList.toggle('text-amber-400', isActive);
-          stepLabel.classList.toggle('text-brand-500', !isActive);
-        }
-
-        const h3 = t.querySelector('h3') as HTMLElement;
-        if (h3) {
-          h3.classList.toggle('text-white', isActive);
-          h3.classList.toggle('text-brand-200', !isActive);
-        }
-
-        const p = t.querySelector('p') as HTMLElement;
-        if (p) {
-          p.classList.toggle('text-brand-300', isActive);
-          p.classList.toggle('text-brand-400', !isActive);
-        }
-      });
-
-      dots.forEach(d => {
-        const isActive = Number(d.dataset.dot) === step;
-        d.classList.toggle('bg-amber-500', isActive);
-        d.classList.toggle('w-8', isActive);
-        d.classList.toggle('bg-brand-700', !isActive);
-      });
-
-      image.style.opacity = '0';
-      setTimeout(() => {
-        image.src = tab.dataset.image || '';
-        image.alt = `Step ${step}: ${tab.dataset.title}`;
-        image.style.opacity = '1';
-      }, 150);
-
-      stepNum.textContent = String(step);
-      title.textContent = tab.dataset.title || '';
-      detail.textContent = tab.dataset.detail || '';
-    }
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => activateStep(Number(tab.dataset.step)));
-    });
-
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => activateStep(Number(dot.dataset.dot)));
-    });
-
-    let currentStep = 1;
-    let autoTimer = setInterval(() => {
-      currentStep = currentStep >= 4 ? 1 : currentStep + 1;
-      activateStep(currentStep);
-    }, 6000);
-
-    const section = document.getElementById('how-we-work');
-    section?.addEventListener('click', () => {
-      clearInterval(autoTimer);
-      autoTimer = setInterval(() => {
-        currentStep = currentStep >= 4 ? 1 : currentStep + 1;
-        activateStep(currentStep);
-      }, 15000);
-    });
-  </script>
-
-  <!-- ============ REVIEWS STRIP ============ -->
-  <section class="border-y border-stone-200/60 bg-white py-14 lg:py-20">
-    <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="font-display text-2xl text-brand-900 sm:text-3xl">
-            What Our Customers Say
-          </h2>
-          <div class="mt-2 flex items-center gap-2">
-            <div class="flex items-center gap-0.5">
-              {[1, 2, 3, 4, 5].map(() => (
-                <Icon name="lucide:star" class="size-5 fill-amber-400 text-amber-400" />
-              ))}
-            </div>
-            <span class="text-sm font-medium text-stone-600">
-              {(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)} average from {reviews.length} reviews
-            </span>
-          </div>
-        </div>
-      </div>
+  <!-- ═══════════════════════════════════════════
+       MARQUEE TRUST BAR
+  ═══════════════════════════════════════════ -->
+  <div class="overflow-hidden border-y border-white/6 bg-dark-800 py-4">
+    <div class="marquee-track gap-10 px-6 text-sm font-medium text-stone-500">
+      {[...Array(2)].map(() =>
+        marqueeItems.map(({ en, ar }) => (
+          <span class="flex shrink-0 items-center gap-3">
+            <span class="size-1.5 shrink-0 rounded-full bg-brand-500"></span>
+            <span class="en-text">{en}</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">{ar}</span>
+          </span>
+        ))
+      )}
     </div>
+  </div>
 
-    <div class="mt-8 flex gap-5 overflow-x-auto px-5 pb-4 lg:px-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <div class="mx-auto flex max-w-7xl gap-5">
-        {reviews.map((review) => (
-          <div class="w-80 shrink-0 rounded-xl border border-stone-200/60 bg-stone-50 p-6">
-            <div class="flex items-center gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Icon
-                  name="lucide:star"
-                  class={`size-4 ${i < Math.floor(review.rating) ? 'fill-amber-400 text-amber-400' : 'text-stone-200'}`}
-                />
-              ))}
-            </div>
-            <p class="mt-3 text-sm leading-relaxed text-stone-600 line-clamp-4">
-              "{review.text}"
-            </p>
-            <div class="mt-4 flex items-center gap-3">
-              <div class="flex size-9 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
-                {review.author.charAt(0)}
-              </div>
-              <div>
-                <p class="text-sm font-semibold text-stone-800">{review.author}</p>
-                <p class="text-xs text-stone-400">{new Date(review.date).toLocaleDateString('en-AE', { month: 'short', year: 'numeric' })}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
 
-  <!-- ============ AREAS SECTION ============ -->
-  <section class="bg-stone-100 py-16 lg:py-24">
+  <!-- ═══════════════════════════════════════════
+       SERVICES GRID
+  ═══════════════════════════════════════════ -->
+  <section class="bg-dark-800 py-20 lg:py-28">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <div class="text-center">
-        <h2 class="font-display text-3xl text-brand-900 sm:text-4xl">
-          Areas We Serve in Abu Dhabi
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+          <span class="en-text">What We Do</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">ما نقدمه</span>
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl lg:text-5xl">
+          <span class="en-text">Complete Car Services <span class="text-gradient-gold">in Abu Dhabi</span></span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">خدمات سيارات متكاملة <span class="text-gradient-gold">في أبوظبي</span></span>
         </h2>
-        <p class="mx-auto mt-4 max-w-2xl text-stone-600">
-          Proudly serving all of {business.serviceRadius} with fast response times and reliable car service — including mobile home service.
+        <p class="mx-auto mt-4 max-w-2xl text-stone-400">
+          <span class="en-text">From car accessories and tyres to AC, mechanical and electrical works — one trusted team for everything your car needs.</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">من إكسسوارات السيارات والإطارات إلى مكيف الهواء والأعمال الميكانيكية والكهربائية — فريق واحد موثوق لكل ما تحتاجه سيارتك.</span>
         </p>
       </div>
 
-      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {serviceAreas.map((area, i) => (
-          <a
-            href={areaUrl(area.slug)}
-            class={`card-hover group rounded-xl border border-stone-200 bg-white p-6 animate-fade-up stagger-${Math.min(i + 1, 6)}`}
-          >
-            <div class="flex items-center gap-3">
-              <Icon name="lucide:map-pin" class="size-5 text-brand-600" />
-              <h3 class="font-display text-lg text-brand-900">{area.name}</h3>
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {serviceTypes.map((service, i) => (
+          <a href={serviceUrl(service.slug)} class={`card-glow group relative overflow-hidden rounded-2xl border border-white/8 bg-dark-700 p-6 animate-fade-up stagger-${Math.min(i+1,6)}`}>
+            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand-500/0 to-brand-500/0 transition-all duration-500 group-hover:from-brand-500/8"></div>
+            {service.emergency && (
+              <span class="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-400 ring-1 ring-amber-500/25">
+                <Icon name="lucide:zap" class="size-2.5" />
+                <span class="en-text">Emergency</span>
+                <span class="ar-text" style="font-family:'Cairo',sans-serif">طوارئ</span>
+              </span>
+            )}
+            <div class="icon-ring relative inline-flex size-12 items-center justify-center rounded-xl bg-brand-500/12 text-brand-400 transition-all group-hover:bg-brand-500/20">
+              <Icon name={service.icon} class="size-6" />
             </div>
-            <p class="mt-1 text-sm text-stone-500">{area.county}</p>
-            <div class="mt-3 flex items-center gap-1.5 text-sm text-stone-600">
-              <Icon name="lucide:clock" class="size-4 text-brand-500" />
-              <span>{area.responseTime} response</span>
+            <h3 class="mt-4 font-display text-lg text-white group-hover:text-brand-300 transition-colors">{service.name}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-stone-500 group-hover:text-stone-400 transition-colors">{service.shortDescription}</p>
+            <div class="mt-4 flex items-center justify-between">
+              <span class="text-sm font-semibold text-brand-500">
+                <span class="en-text">From AED </span>
+                <span class="ar-text" style="font-family:'Cairo',sans-serif">من درهم </span>
+                {service.priceRange.min}
+              </span>
+              <Icon name="lucide:arrow-right" class="size-4 text-stone-600 transition-all group-hover:text-brand-400 group-hover:translate-x-1 rtl-flip" />
             </div>
           </a>
         ))}
@@ -486,32 +341,280 @@ const schema = {
     </div>
   </section>
 
-  <!-- ============ CTA BANNER ============ -->
-  <section class="bg-brand-900">
-    <div class="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
-      <div class="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
+
+  <!-- ═══════════════════════════════════════════
+       HOW WE WORK
+  ═══════════════════════════════════════════ -->
+  <section class="relative overflow-hidden bg-dark-900 py-20 lg:py-28">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] rounded-full bg-brand-500/5 blur-[120px] pointer-events-none"></div>
+    <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+          <span class="en-text">Simple Process</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">عملية بسيطة</span>
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl lg:text-5xl">
+          <span class="en-text">How We Work</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">كيف نعمل</span>
+        </h2>
+        <p class="mx-auto mt-4 max-w-xl text-stone-400">
+          <span class="en-text">From your first call to the job being done — simple, transparent, no surprises.</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">من أول اتصال حتى إتمام العمل — بسيط وشفاف بدون مفاجآت.</span>
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {howWeWorkSteps.map(({ n, icon, en, ar, bodyEn, bodyAr }, i) => (
+          <div class={`card-glow group relative rounded-2xl border border-white/8 bg-dark-800 p-6 animate-fade-up stagger-${i+1}`}>
+            <div class="mb-5 flex items-center justify-between">
+              <div class="flex size-12 items-center justify-center rounded-xl bg-brand-500/12 text-brand-400 group-hover:bg-brand-500/22 transition-colors">
+                <Icon name={icon} class="size-6" />
+              </div>
+              <span class="font-display text-4xl font-bold text-white/8 group-hover:text-white/14 transition-colors select-none">{String(n).padStart(2,'0')}</span>
+            </div>
+            <h3 class="font-display text-lg text-white">
+              <span class="en-text">{en}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{ar}</span>
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-stone-500 group-hover:text-stone-400 transition-colors">
+              <span class="en-text">{bodyEn}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{bodyAr}</span>
+            </p>
+            {n < 4 && (
+              <div class="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 size-6 items-center justify-center rounded-full bg-dark-700 border border-white/8 lg:flex">
+                <Icon name="lucide:chevron-right" class="size-3 text-brand-500 rtl-flip" />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       REVIEWS
+  ═══════════════════════════════════════════ -->
+  <section class="bg-dark-800 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 class="font-display text-3xl text-white">Need Car Service in Abu Dhabi?</h2>
-          <p class="mt-2 text-brand-200">
-            Call us now or WhatsApp — we come to you. Open daily 9AM to 11:45PM across all Abu Dhabi areas.
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+            <span class="en-text">Customer Reviews</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">آراء العملاء</span>
           </p>
+          <h2 class="mt-2 font-display text-3xl text-white sm:text-4xl">
+            <span class="en-text">What Our Clients Say</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">ماذا يقول عملاؤنا</span>
+          </h2>
         </div>
-        <div class="flex shrink-0 flex-wrap gap-4">
-          <a
-            href={business.phoneHref}
-            class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-brand-950 shadow-lg transition-all hover:bg-amber-400"
-          >
-            <Icon name="lucide:phone" class="size-5" />
-            {business.phone}
+        <div class="flex items-center gap-3 rounded-2xl border border-white/8 bg-dark-700 px-5 py-3">
+          <div class="flex gap-0.5">
+            {[1,2,3,4,5].map(() => (<svg class="size-5 fill-brand-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>))}
+          </div>
+          <span class="text-xl font-bold text-white">{avgRating}</span>
+          <span class="text-sm text-stone-500">
+            / 5 · {reviews.length}&nbsp;
+            <span class="en-text">reviews</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">تقييم</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-10 flex gap-5 overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {reviews.map((review) => (
+          <div class="card-glow w-80 shrink-0 rounded-2xl border border-white/8 bg-dark-700 p-6">
+            <div class="flex items-start justify-between">
+              <div class="flex gap-0.5">
+                {Array.from({length:5}).map((_,i) => (
+                  <svg class={`size-4 ${i < Math.floor(review.rating) ? 'fill-brand-400' : 'fill-white/10'}`} viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                ))}
+              </div>
+              <span class="text-xs text-stone-600">{new Date(review.date).toLocaleDateString('en-AE',{month:'short',year:'numeric'})}</span>
+            </div>
+            <p class="mt-4 text-sm leading-relaxed text-stone-400 line-clamp-4">"{review.text}"</p>
+            <div class="mt-5 flex items-center gap-3">
+              <div class="flex size-9 items-center justify-center rounded-xl bg-brand-500/15 text-sm font-bold text-brand-400">{review.author.charAt(0)}</div>
+              <div>
+                <p class="text-sm font-semibold text-white">{review.author}</p>
+                <p class="text-xs text-stone-600">{review.source ?? 'Google'}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       GOOGLE REVIEW SCREENSHOTS MARQUEE
+  ═══════════════════════════════════════════ -->
+  <div class="overflow-hidden border-y border-white/6 bg-dark-900 py-8">
+    <p class="mb-5 text-center text-xs font-bold uppercase tracking-[0.2em] text-stone-600">
+      <span class="en-text">Real Google Reviews from Our Customers</span>
+      <span class="ar-text" style="font-family:'Cairo',sans-serif">تقييمات Google الحقيقية من عملائنا</span>
+    </p>
+    <!-- Track 1 — forward -->
+    <div class="marquee-track gap-5 px-4">
+      {[...Array(2)].map(() =>
+        ['review-44','review-45','review-46','review-47','review-48','review-49','review-50','review-51'].map((r) => (
+          <div class="shrink-0 overflow-hidden rounded-2xl border border-white/8 shadow-xl transition-transform duration-300 hover:scale-105">
+            <img
+              src={`/images/${r}.webp`}
+              alt={`5-star Google review for Al Sham Palace Auto Car Service — Abu Dhabi car service near MBZ City`}
+              class="h-40 w-auto object-contain bg-white"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        ))
+      )}
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       WHY CHOOSE US
+  ═══════════════════════════════════════════ -->
+  <section class="bg-dark-900 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-16 lg:grid-cols-2 lg:items-center">
+
+        <!-- Left -->
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+            <span class="en-text">Why Al Sham Palace</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">لماذا قصر الشام</span>
+          </p>
+          <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl lg:text-5xl">
+            <span class="en-text">Abu Dhabi's Car Service <span class="text-gradient-gold">Experts</span></span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">خبراء خدمة السيارات <span class="text-gradient-gold">في أبوظبي</span></span>
+          </h2>
+          <p class="mt-5 text-stone-400 leading-relaxed">
+            <span class="en-text">Since 1999, Al Sham Palace has been the go-to auto service centre for thousands of Abu Dhabi drivers. We combine workshop precision with mobile convenience — coming to your home or office anywhere across Abu Dhabi.</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">منذ 1999، كان قصر الشام الوجهة الأولى لآلاف سائقي أبوظبي. نجمع بين دقة الورشة وسهولة الخدمة المنزلية — نأتي إليك في منزلك أو مكتبك في أي مكان بأبوظبي.</span>
+          </p>
+          <ul class="mt-8 space-y-4">
+            {whyBullets.map(({ en, ar }) => (
+              <li class="flex items-start gap-3">
+                <div class="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-lg bg-brand-500/15">
+                  <Icon name="lucide:check" class="size-3.5 text-brand-400" />
+                </div>
+                <span class="text-sm text-stone-300">
+                  <span class="en-text">{en}</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">{ar}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <a href={contactUrl()} class="mt-10 inline-flex items-center gap-2 rounded-2xl bg-brand-500 px-7 py-4 text-sm font-bold text-dark-900 shadow-xl shadow-brand-500/25 transition-all hover:bg-brand-400 hover:-translate-y-1">
+            <span class="en-text">Get a Free Quote</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">احصل على عرض سعر مجاني</span>
+            <Icon name="lucide:arrow-right" class="size-4 rtl-flip" />
           </a>
-          <a
-            href={contactUrl()}
-            class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20"
-          >
-            Contact Us
-          </a>
+        </div>
+
+        <!-- Right: stat cards -->
+        <div class="grid grid-cols-2 gap-4">
+          {statsData.map(({ value, icon, en, ar }, i) => (
+            <div class={`card-glow rounded-2xl border border-white/8 bg-dark-800 p-6 text-center animate-fade-up stagger-${i+1}`}>
+              <div class="mx-auto mb-3 flex size-12 items-center justify-center rounded-xl bg-brand-500/12">
+                <Icon name={icon} class="size-6 text-brand-400" />
+              </div>
+              <div class="font-display text-4xl font-bold text-gradient-gold">{value}</div>
+              <div class="mt-1 text-xs text-stone-500">
+                <span class="en-text">{en}</span>
+                <span class="ar-text" style="font-family:'Cairo',sans-serif">{ar}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       SERVICE AREAS
+  ═══════════════════════════════════════════ -->
+  <section class="bg-dark-800 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+          <span class="en-text">Coverage</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">التغطية</span>
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl lg:text-5xl">
+          <span class="en-text">Areas We Serve <span class="text-gradient-gold">in Abu Dhabi</span></span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">المناطق التي نخدمها <span class="text-gradient-gold">في أبوظبي</span></span>
+        </h2>
+        <p class="mx-auto mt-4 max-w-xl text-stone-400">
+          <span class="en-text">Fast response times across all Abu Dhabi communities — home service or workshop visit.</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">أوقات استجابة سريعة في جميع أحياء أبوظبي — خدمة منزلية أو زيارة الورشة.</span>
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+        {serviceAreas.map((area, i) => (
+          <a href={areaUrl(area.slug)} class={`card-glow group flex items-center justify-between rounded-xl border border-white/8 bg-dark-700 px-4 py-3.5 animate-fade-up stagger-${Math.min(i+1,6)}`}>
+            <div class="flex items-center gap-3">
+              <div class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-500/12">
+                <Icon name="lucide:map-pin" class="size-4 text-brand-400" />
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-white group-hover:text-brand-300 transition-colors">{area.name}</p>
+                <p class="text-xs text-stone-600">{area.responseTime}</p>
+              </div>
+            </div>
+            <Icon name="lucide:chevron-right" class="size-4 shrink-0 text-stone-700 transition-all group-hover:text-brand-500 group-hover:translate-x-0.5 rtl-flip" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       CTA BANNER
+  ═══════════════════════════════════════════ -->
+  <section class="relative overflow-hidden bg-dark-900 py-20 lg:py-28">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute left-1/2 top-0 -translate-x-1/2 h-px w-2/3 bg-gradient-to-r from-transparent via-brand-500/50 to-transparent"></div>
+      <div class="absolute left-1/4 top-1/2 size-[400px] -translate-y-1/2 rounded-full bg-brand-500/8 blur-[100px]"></div>
+      <div class="absolute right-1/4 top-1/2 size-[300px] -translate-y-1/2 rounded-full bg-amber-500/6 blur-[80px]"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-3xl px-5 text-center lg:px-8">
+      <div class="inline-flex items-center gap-2 rounded-full border border-brand-500/25 bg-brand-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-400 mb-6">
+        <Icon name="lucide:phone-call" class="size-3.5 shrink-0" />
+        <span class="en-text">Available Daily · 9AM – 11:45PM</span>
+        <span class="ar-text" style="font-family:'Cairo',sans-serif">متاح يومياً · 9 ص – 11:45 م</span>
+      </div>
+
+      <h2 class="font-display text-4xl text-white sm:text-5xl lg:text-6xl">
+        <span class="en-text">Need Car Service <span class="text-gradient-gold">in Abu Dhabi?</span></span>
+        <span class="ar-text" style="font-family:'Cairo',sans-serif">هل تحتاج خدمة سيارات <span class="text-gradient-gold">في أبوظبي؟</span></span>
+      </h2>
+
+      <p class="mx-auto mt-5 max-w-xl text-lg text-stone-400">
+        <span class="en-text">Call or WhatsApp {business.name} — we come to you anywhere in Abu Dhabi. Free estimate, upfront price, professional team.</span>
+        <span class="ar-text" style="font-family:'Cairo',sans-serif">اتصل أو تواصل عبر واتساب مع {business.name} — نأتي إليك في أي مكان بأبوظبي. تقدير مجاني، سعر واضح، فريق احترافي.</span>
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a href={business.phoneHref} class="inline-flex items-center gap-3 rounded-2xl bg-brand-500 px-8 py-4 text-base font-bold text-dark-900 shadow-2xl shadow-brand-500/30 transition-all hover:bg-brand-400 hover:-translate-y-1">
+          <Icon name="lucide:phone" class="size-5 shrink-0" />
+          {business.phone}
+        </a>
+        <a href="https://wa.me/971503448933" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-3 rounded-2xl border border-[#25D366]/30 bg-[#25D366]/10 px-8 py-4 text-base font-bold text-[#25D366] transition-all hover:bg-[#25D366]/20 hover:-translate-y-1">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="size-5 shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          <span class="en-text">WhatsApp Us</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">تواصل واتساب</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>

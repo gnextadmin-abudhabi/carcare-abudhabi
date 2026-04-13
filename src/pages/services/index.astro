@@ -1,63 +1,153 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { Icon } from 'astro-icon/components';
 import { business } from '../../data/business';
 import { serviceTypes } from '../../data/serviceTypes';
 import { serviceUrl, contactUrl } from '../../lib/urls';
+
+const whyUs = [
+  { icon: 'lucide:calendar', en: '25+ Years Experience', ar: '+25 سنة خبرة', bodyEn: 'Trusted by Abu Dhabi drivers since 1999 — decades of proven service.', bodyAr: 'موثوق به من قبل سائقي أبوظبي منذ 1999 — عقود من الخدمة المثبتة.' },
+  { icon: 'lucide:home',     en: 'Mobile Home Service', ar: 'خدمة منزلية متنقلة', bodyEn: 'We come to your home, office or parking anywhere across Abu Dhabi.', bodyAr: 'نأتي إلى منزلك أو مكتبك أو موقف سيارتك في أي مكان بأبوظبي.' },
+  { icon: 'lucide:shield-check', en: 'Certified Technicians', ar: 'فنيون معتمدون', bodyEn: 'All repairs carried out by certified mechanics using quality OEM parts.', bodyAr: 'جميع الإصلاحات تتم على يد ميكانيكيين معتمدين بقطع غيار أصلية.' },
+  { icon: 'lucide:badge-dollar-sign', en: 'Upfront Pricing', ar: 'أسعار واضحة', bodyEn: 'No hidden charges — ever. The price you are quoted is the price you pay.', bodyAr: 'لا رسوم خفية أبداً. السعر المتفق عليه هو السعر المدفوع.' },
+  { icon: 'lucide:clock', en: 'Open 9AM – 11:45PM', ar: 'مفتوح 9 ص – 11:45 م', bodyEn: 'Available every day of the week including weekends and public holidays.', bodyAr: 'متاح كل يوم في الأسبوع بما في ذلك الإجازات والعطل الرسمية.' },
+  { icon: 'lucide:star', en: '5-Star Rated Service', ar: 'خدمة بتقييم 5 نجوم', bodyEn: 'Hundreds of verified 5-star Google reviews from satisfied Abu Dhabi customers.', bodyAr: 'مئات التقييمات المُتحقق منها بخمس نجوم من عملاء راضين في أبوظبي.' },
+];
+
+const processSteps = [
+  { n: 1, icon: 'lucide:phone-call', en: 'Call or WhatsApp', ar: 'اتصل أو واتساب', bodyEn: 'Describe your issue on 050 344 8933 — get an instant upfront quote.', bodyAr: 'صف المشكلة على 050 344 8933 — احصل على سعر فوري وواضح.' },
+  { n: 2, icon: 'lucide:truck',      en: 'We Arrive Fast',  ar: 'نصل بسرعة',      bodyEn: 'Mobile team reaches your location or visit our MBZ City workshop.', bodyAr: 'فريقنا المتنقل يصل إلى موقعك أو زر ورشتنا في مدينة محمد بن زايد.' },
+  { n: 3, icon: 'lucide:wrench',     en: 'Expert Fix',      ar: 'إصلاح احترافي',  bodyEn: 'Certified technicians fix it right the first time with quality parts.', bodyAr: 'فنيون معتمدون يصلحونها بشكل صحيح من المرة الأولى بقطع عالية الجودة.' },
+  { n: 4, icon: 'lucide:check-circle', en: 'All Done',      ar: 'اكتمل',          bodyEn: 'Car handed back in top condition. Pay what was quoted — nothing more.', bodyAr: 'سيارتك بحالة ممتازة. ادفع ما تم الاتفاق عليه — لا أكثر.' },
+];
 ---
 
 <BaseLayout
   title={`Car Services Abu Dhabi | ${business.name}`}
-  description={`${business.name} offers a full range of car services across ${business.serviceRadius}. Car accessories, tyres, AC repair, mechanical works, electrical, home service, and battery replacement.`}
+  description={`${business.name} offers complete car services in Abu Dhabi — car accessories, tyres, AC repair, mechanical works, electrical, home service & battery replacement. Open daily 9AM–11:45PM.`}
 >
-  <Breadcrumbs crumbs={[{ label: 'Services' }]} />
 
-  <!-- ============ HEADER ============ -->
-  <section class="py-12 lg:py-16">
-    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════ -->
+  <section class="relative overflow-hidden bg-dark-900 py-20 lg:py-28">
+    <!-- Hero background photo -->
+    <div class="absolute inset-0">
+      <img
+        src="/images/hero.webp"
+        alt="Al Sham Palace Auto Car Service workshop — Mohamed Bin Zayed City, Abu Dhabi, UAE"
+        class="h-full w-full object-cover object-center"
+        width="1920" height="1080"
+        loading="eager"
+        decoding="async"
+      />
+      <div class="absolute inset-0 bg-dark-900/80"></div>
+    </div>
+    <!-- Gradient mesh -->
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute -top-24 -right-24 size-[500px] rounded-full bg-brand-500/10 blur-[100px]"></div>
+      <div class="absolute bottom-0 left-0 size-[400px] rounded-full bg-brand-600/8 blur-[90px]"></div>
+    </div>
+    <!-- Grid pattern -->
+    <div class="pointer-events-none absolute inset-0 opacity-20"
+      style="background-image:linear-gradient(rgba(245,166,35,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,0.06) 1px,transparent 1px);background-size:60px 60px;"></div>
+
+    <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
       <div class="max-w-3xl animate-fade-up">
-        <h1 class="font-display text-4xl text-brand-900 sm:text-5xl">
-          Our Car Services in Abu Dhabi
+        <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-brand-500/25 bg-brand-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-400">
+          <span class="size-1.5 rounded-full bg-brand-400 animate-pulse"></span>
+          <span class="en-text">Abu Dhabi · All Areas Covered</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">أبوظبي · جميع المناطق مغطاة</span>
+        </div>
+        <h1 class="font-display text-4xl leading-tight text-white sm:text-5xl lg:text-6xl">
+          <span class="en-text">Complete Car Services <span class="text-gradient-gold">in Abu Dhabi</span></span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">خدمات سيارات متكاملة <span class="text-gradient-gold">في أبوظبي</span></span>
         </h1>
-        <p class="mt-4 text-lg leading-relaxed text-stone-600">
-          Whether you need an emergency battery replacement, a full AC overhaul, or premium car accessories installed at your home — {business.name} provides comprehensive car services for all makes and models throughout {business.serviceRadius}.
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-stone-400">
+          <span class="en-text">Whether you need an emergency battery replacement, a full AC overhaul, or premium car accessories installed at your home — {business.name} provides comprehensive car services for all makes and models throughout {business.serviceRadius}.</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">سواء احتجت إلى استبدال بطارية طارئ، أو إصلاح شامل لمكيف الهواء، أو تركيب إكسسوارات سيارات فاخرة في منزلك — يقدم {business.name} خدمات سيارات شاملة لجميع الماركات والطرازات في {business.serviceRadius}.</span>
         </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href={business.phoneHref} class="btn-shine inline-flex items-center gap-2.5 rounded-2xl bg-brand-500 px-7 py-3.5 text-sm font-bold text-dark-900 shadow-xl shadow-brand-500/25 transition-all hover:bg-brand-400 hover:-translate-y-1">
+            <Icon name="lucide:phone" class="size-4 shrink-0" />
+            <span class="en-text">Call {business.phone}</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">اتصل {business.phone}</span>
+          </a>
+          <a href="https://wa.me/971503448933" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2.5 rounded-2xl border border-[#25D366]/30 bg-[#25D366]/10 px-7 py-3.5 text-sm font-bold text-[#25D366] transition-all hover:bg-[#25D366]/20 hover:-translate-y-1">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="size-4 shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            <span class="en-text">WhatsApp Us</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">تواصل واتساب</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ SERVICES GRID ============ -->
-  <section class="pb-16 lg:pb-24">
+
+  <!-- ═══════════════════════════════════════════
+       SERVICES GRID
+  ═══════════════════════════════════════════ -->
+  <section class="bg-dark-800 py-20 lg:py-28">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+          <span class="en-text">What We Offer</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">ما نقدمه</span>
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl lg:text-5xl">
+          <span class="en-text">8 Professional <span class="text-gradient-gold">Car Services</span></span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">8 خدمات سيارات <span class="text-gradient-gold">احترافية</span></span>
+        </h2>
+        <p class="mx-auto mt-4 max-w-2xl text-stone-400">
+          <span class="en-text">From tyres to AC, accessories to electrical works — one trusted team handles everything your car needs.</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">من الإطارات إلى المكيف، ومن الإكسسوارات إلى الأعمال الكهربائية — فريق واحد موثوق يتعامل مع كل ما تحتاجه سيارتك.</span>
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {serviceTypes.map((service, i) => (
           <a
             href={serviceUrl(service.slug)}
-            class={`card-hover group relative rounded-xl border border-stone-200 bg-white p-6 animate-fade-up stagger-${Math.min(i + 1, 6)}`}
+            class={`card-glow group relative overflow-hidden rounded-2xl border border-white/8 bg-dark-700 p-6 animate-fade-up stagger-${Math.min(i + 1, 6)}`}
           >
+            <!-- Hover gradient overlay -->
+            <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand-500/0 to-brand-500/0 transition-all duration-500 group-hover:from-brand-500/8"></div>
+
             {service.emergency && (
-              <span class="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
-                <Icon name="lucide:zap" class="size-3" />
-                24/7
+              <span class="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-400 ring-1 ring-amber-500/25">
+                <Icon name="lucide:zap" class="size-2.5" />
+                <span class="en-text">24/7</span>
+                <span class="ar-text" style="font-family:'Cairo',sans-serif">طوارئ</span>
               </span>
             )}
-            <div class="flex size-12 items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-100">
-              <Icon name={service.icon} class="size-6" />
+
+            <div class="relative inline-flex size-14 items-center justify-center rounded-xl bg-brand-500/12 text-brand-400 transition-all group-hover:bg-brand-500/22 group-hover:scale-110">
+              <Icon name={service.icon} class="size-7" />
             </div>
-            <h2 class="mt-4 font-display text-lg text-brand-900">
-              {service.name}
+
+            <h2 class="mt-4 font-display text-lg text-white transition-colors group-hover:text-brand-300">
+              <span class="en-text">{service.name}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{service.nameAr ?? service.name}</span>
             </h2>
-            <p class="mt-2 text-sm leading-relaxed text-stone-600">
-              {service.shortDescription}
+
+            <p class="mt-2 text-sm leading-relaxed text-stone-500 group-hover:text-stone-400 transition-colors">
+              <span class="en-text">{service.shortDescription}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{service.shortDescriptionAr ?? service.shortDescription}</span>
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <span class="text-sm font-semibold text-brand-700">
-                From AED {service.priceRange.min}
-              </span>
-              <span class="text-xs text-stone-400">
-                Up to AED {service.priceRange.max.toLocaleString()}
-              </span>
+
+            <!-- Price row -->
+            <div class="mt-5 flex items-center justify-between border-t border-white/6 pt-4">
+              <div>
+                <span class="text-xs text-stone-600">
+                  <span class="en-text">Starting from</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">يبدأ من</span>
+                </span>
+                <p class="text-sm font-bold text-brand-400">AED {service.priceRange.min}</p>
+              </div>
+              <div class="flex size-9 items-center justify-center rounded-xl border border-white/8 transition-all group-hover:border-brand-500/40 group-hover:bg-brand-500/12">
+                <Icon name="lucide:arrow-right" class="size-4 text-stone-600 transition-all group-hover:text-brand-400 group-hover:translate-x-0.5 rtl-flip" />
+              </div>
             </div>
           </a>
         ))}
@@ -65,32 +155,224 @@ import { serviceUrl, contactUrl } from '../../lib/urls';
     </div>
   </section>
 
-  <!-- ============ CTA ============ -->
-  <section class="bg-brand-900">
-    <div class="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
-      <div class="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
-        <div>
-          <h2 class="font-display text-3xl text-white">Not Sure What You Need?</h2>
-          <p class="mt-2 text-brand-200">
-            Call us and describe the issue. We will help you figure out the right service and provide an honest estimate with no hidden charges.
+
+  <!-- ═══════════════════════════════════════════
+       HOW WE WORK
+  ═══════════════════════════════════════════ -->
+  <section class="relative overflow-hidden bg-dark-900 py-20 lg:py-28">
+    <div class="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] rounded-full bg-brand-500/5 blur-[120px]"></div>
+    <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+          <span class="en-text">Our Process</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">عمليتنا</span>
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl lg:text-5xl">
+          <span class="en-text">Simple, <span class="text-gradient-gold">Transparent</span> Process</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">عملية <span class="text-gradient-gold">بسيطة وشفافة</span></span>
+        </h2>
+        <p class="mx-auto mt-4 max-w-xl text-stone-400">
+          <span class="en-text">From your first call to the job done — no surprises, no hidden costs, just professional service.</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">من أول اتصال حتى اكتمال العمل — لا مفاجآت، لا تكاليف خفية، فقط خدمة احترافية.</span>
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {processSteps.map(({ n, icon, en, ar, bodyEn, bodyAr }, i) => (
+          <div class={`card-glow group relative rounded-2xl border border-white/8 bg-dark-800 p-6 animate-fade-up stagger-${i + 1}`}>
+            <div class="mb-5 flex items-center justify-between">
+              <div class="flex size-12 items-center justify-center rounded-xl bg-brand-500/12 text-brand-400 group-hover:bg-brand-500/22 transition-colors">
+                <Icon name={icon} class="size-6" />
+              </div>
+              <span class="font-display text-4xl font-bold text-white/8 group-hover:text-white/14 transition-colors select-none">{String(n).padStart(2, '0')}</span>
+            </div>
+            <h3 class="font-display text-lg text-white">
+              <span class="en-text">{en}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{ar}</span>
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-stone-500 group-hover:text-stone-400 transition-colors">
+              <span class="en-text">{bodyEn}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{bodyAr}</span>
+            </p>
+            {n < 4 && (
+              <div class="absolute -right-3 top-1/2 z-10 hidden -translate-y-1/2 size-6 items-center justify-center rounded-full bg-dark-700 border border-white/8 lg:flex">
+                <Icon name="lucide:chevron-right" class="size-3 text-brand-500 rtl-flip" />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       WHY CHOOSE US
+  ═══════════════════════════════════════════ -->
+  <section class="relative overflow-hidden bg-dark-800 py-20 lg:py-28">
+    <div class="pointer-events-none absolute -top-32 right-0 size-[400px] rounded-full bg-brand-500/8 blur-[100px]"></div>
+    <div class="pointer-events-none absolute bottom-0 left-0 size-[300px] rounded-full bg-amber-500/6 blur-[80px]"></div>
+
+    <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+          <span class="en-text">Why Choose Us</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">لماذا تختارنا</span>
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl lg:text-5xl">
+          <span class="en-text">Abu Dhabi's Most <span class="text-gradient-gold">Trusted</span> Car Service</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">خدمة السيارات <span class="text-gradient-gold">الأكثر موثوقية</span> في أبوظبي</span>
+        </h2>
+        <p class="mx-auto mt-4 max-w-2xl text-stone-400">
+          <span class="en-text">Since 1999, thousands of Abu Dhabi drivers have trusted Al Sham Palace for honest, expert car care. Here's why.</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">منذ 1999، وثق آلاف سائقي أبوظبي بقصر الشام للعناية الصادقة والمتخصصة بسياراتهم. إليك السبب.</span>
+        </p>
+      </div>
+
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {whyUs.map(({ icon, en, ar, bodyEn, bodyAr }, i) => (
+          <div class={`card-glow tilt-card group rounded-2xl border border-white/8 bg-dark-700 p-6 animate-fade-up stagger-${Math.min(i + 1, 6)}`}>
+            <div class="mb-4 flex size-14 items-center justify-center rounded-2xl bg-brand-500/12 text-brand-400 transition-all group-hover:bg-brand-500/22 group-hover:scale-110">
+              <Icon name={icon} class="size-7" />
+            </div>
+            <h3 class="font-display text-lg text-white group-hover:text-brand-300 transition-colors">
+              <span class="en-text">{en}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{ar}</span>
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-stone-500 group-hover:text-stone-400 transition-colors">
+              <span class="en-text">{bodyEn}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{bodyAr}</span>
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <!-- Stats row -->
+      <div class="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {[
+          { value: '25+', label: 'Years in Abu Dhabi', labelAr: 'سنة في أبوظبي', icon: 'lucide:calendar' },
+          { value: '20+', label: 'Areas Covered',      labelAr: 'منطقة مغطاة',   icon: 'lucide:map-pin' },
+          { value: '8',   label: 'Services Available', labelAr: 'خدمة متوفرة',   icon: 'lucide:wrench' },
+          { value: '5★',  label: 'Average Rating',     labelAr: 'متوسط التقييم', icon: 'lucide:star' },
+        ].map(({ value, label, labelAr, icon }) => (
+          <div class="card-glow rounded-2xl border border-white/8 bg-dark-800 p-5 text-center">
+            <div class="mx-auto mb-2 flex size-10 items-center justify-center rounded-xl bg-brand-500/12">
+              <Icon name={icon} class="size-5 text-brand-400" />
+            </div>
+            <div class="font-display text-3xl font-bold text-gradient-gold">{value}</div>
+            <div class="mt-1 text-xs text-stone-500">
+              <span class="en-text">{label}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{labelAr}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       SERVICE FEATURES DEEP DIVE
+  ═══════════════════════════════════════════ -->
+  <section class="bg-dark-900 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+          <span class="en-text">Service Details</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">تفاصيل الخدمات</span>
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl">
+          <span class="en-text">What's Included in <span class="text-gradient-gold">Each Service</span></span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">ما يشمله <span class="text-gradient-gold">كل خدمة</span></span>
+        </h2>
+      </div>
+
+      <div class="mt-14 space-y-6">
+        {serviceTypes.map((service, i) => (
+          <a href={serviceUrl(service.slug)} class={`card-glow group flex flex-col gap-6 overflow-hidden rounded-2xl border border-white/8 bg-dark-800 p-6 transition-all lg:flex-row lg:items-center animate-fade-up stagger-${Math.min(i + 1, 6)}`}>
+            <!-- Icon + title -->
+            <div class="flex items-center gap-4 lg:w-48 lg:shrink-0">
+              <div class="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-brand-500/12 text-brand-400 transition-all group-hover:bg-brand-500/22 group-hover:scale-110">
+                <Icon name={service.icon} class="size-7" />
+              </div>
+              <div>
+                <h3 class="font-display text-lg text-white group-hover:text-brand-300 transition-colors">
+                  <span class="en-text">{service.name}</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">{service.nameAr ?? service.name}</span>
+                </h3>
+                {service.emergency && (
+                  <span class="mt-1 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-400">
+                    <Icon name="lucide:zap" class="size-2.5" />
+                    <span class="en-text">Emergency</span>
+                    <span class="ar-text" style="font-family:'Cairo',sans-serif">طوارئ</span>
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <!-- Description -->
+            <p class="flex-1 text-sm leading-relaxed text-stone-400 group-hover:text-stone-300 transition-colors">
+              <span class="en-text">{service.description}</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">{service.shortDescriptionAr ?? service.shortDescription}</span>
+            </p>
+
+            <!-- Price + arrow -->
+            <div class="flex items-center gap-4 lg:shrink-0">
+              <div class="rounded-xl border border-white/8 bg-dark-700 px-4 py-2 text-center">
+                <p class="text-xs text-stone-600">
+                  <span class="en-text">From</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">من</span>
+                </p>
+                <p class="text-sm font-bold text-brand-400">AED {service.priceRange.min}</p>
+              </div>
+              <div class="flex size-10 items-center justify-center rounded-xl border border-white/8 transition-all group-hover:border-brand-500/40 group-hover:bg-brand-500/12">
+                <Icon name="lucide:arrow-right" class="size-4 text-stone-600 transition-all group-hover:text-brand-400 rtl-flip" />
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       CTA
+  ═══════════════════════════════════════════ -->
+  <section class="relative overflow-hidden bg-dark-800 py-20 lg:py-24">
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-brand-500/50 to-transparent"></div>
+      <div class="absolute left-1/4 top-1/2 size-[400px] -translate-y-1/2 rounded-full bg-brand-500/8 blur-[100px]"></div>
+      <div class="absolute right-1/4 top-1/2 size-[300px] -translate-y-1/2 rounded-full bg-amber-500/6 blur-[80px]"></div>
+    </div>
+
+    <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="flex flex-col items-center gap-8 text-center lg:flex-row lg:justify-between lg:text-left">
+        <div class="max-w-xl">
+          <h2 class="font-display text-3xl text-white sm:text-4xl lg:text-5xl">
+            <span class="en-text">Not Sure What You Need? <span class="text-gradient-gold">Just Call Us.</span></span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">لست متأكداً مما تحتاجه؟ <span class="text-gradient-gold">فقط اتصل بنا.</span></span>
+          </h2>
+          <p class="mt-4 text-stone-400">
+            <span class="en-text">Describe your issue and our team will recommend the right service with a clear, honest estimate — no obligation.</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">صف مشكلتك وسيوصي فريقنا بالخدمة المناسبة مع تقدير واضح وصادق — بدون أي التزام.</span>
           </p>
         </div>
-        <div class="flex shrink-0 flex-wrap gap-4">
-          <a
-            href={business.phoneHref}
-            class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-brand-950 shadow-lg transition-all hover:bg-amber-400"
-          >
-            <Icon name="lucide:phone" class="size-5" />
+        <div class="flex shrink-0 flex-wrap justify-center gap-4 lg:justify-end">
+          <a href={business.phoneHref}
+             class="btn-shine inline-flex items-center gap-2.5 rounded-2xl bg-brand-500 px-7 py-4 text-sm font-bold text-dark-900 shadow-xl shadow-brand-500/25 transition-all hover:bg-brand-400 hover:-translate-y-1">
+            <Icon name="lucide:phone" class="size-5 shrink-0" />
             {business.phone}
           </a>
-          <a
-            href={contactUrl()}
-            class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20"
-          >
-            Request a Quote
+          <a href={contactUrl()}
+             class="inline-flex items-center gap-2.5 rounded-2xl border border-white/15 bg-white/6 px-7 py-4 text-sm font-semibold text-white transition-all hover:bg-white/12 hover:-translate-y-1">
+            <span class="en-text">Request a Quote</span>
+            <span class="ar-text" style="font-family:'Cairo',sans-serif">طلب عرض سعر</span>
+            <Icon name="lucide:arrow-right" class="size-4 rtl-flip" />
           </a>
         </div>
       </div>
     </div>
   </section>
+
 </BaseLayout>

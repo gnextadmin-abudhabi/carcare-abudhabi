@@ -3,6 +3,47 @@ import SEO from '../components/SEO.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import { business } from '../data/business';
+
+// Minimal LocalBusiness JSON-LD present on every page for Google Maps signals
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['AutoRepair', 'LocalBusiness'],
+  '@id': `${business.website}/#business`,
+  name: business.name,
+  url: business.website,
+  telephone: '+971503448933',
+  email: business.email,
+  logo: `${business.website}${business.logo}`,
+  image: `${business.website}/images/hero.webp`,
+  priceRange: 'AED',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: business.address.street,
+    addressLocality: business.address.city,
+    addressRegion: 'Abu Dhabi',
+    addressCountry: 'AE',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: business.coordinates.lat,
+    longitude: business.coordinates.lng,
+  },
+  hasMap: 'https://maps.app.goo.gl/uDuBRuNgejb3Zjk37',
+  sameAs: [
+    'https://maps.app.goo.gl/uDuBRuNgejb3Zjk37',
+    'https://wa.me/971503448933',
+    ...(business.social?.instagram ? [business.social.instagram] : []),
+    ...(business.social?.facebook ? [business.social.facebook] : []),
+    ...(business.social?.tiktok ? [business.social.tiktok] : []),
+  ],
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+    opens: '09:00',
+    closes: '23:45',
+  }],
+};
 
 interface Props {
   title: string;
@@ -22,18 +63,43 @@ const { title, description, canonicalUrl, ogImage, schema, noindex } = Astro.pro
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#0d0d0d" />
 
     <!-- Favicons -->
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/images/logo.webp" type="image/webp" />
+    <link rel="apple-touch-icon" href="/images/logo.webp" />
 
-    <!-- Google Fonts: DM Serif Display + DM Sans -->
+    <!-- DNS Prefetch for third-party services -->
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://maps.googleapis.com" />
+    <link rel="dns-prefetch" href="https://maps.gstatic.com" />
+    <link rel="dns-prefetch" href="https://api.web3forms.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+    <!-- Google Fonts: Syne (display) + Inter (body) + Cairo (Arabic) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Global LocalBusiness schema on every page for Google Maps signals -->
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300..800&family=Inter:wght@300..700&family=Syne:wght@400..800&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Restore language preference BEFORE render to avoid flash -->
+    <script is:inline>
+      (function(){
+        try {
+          var lang = localStorage.getItem('alsham-lang');
+          if (lang === 'ar') {
+            document.documentElement.setAttribute('lang', 'ar');
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.classList.add('ar');
+          }
+        } catch(e){}
+      })();
+    </script>
 
     <SEO
       title={title}
@@ -44,35 +110,83 @@ const { title, description, canonicalUrl, ogImage, schema, noindex } = Astro.pro
       noindex={noindex}
     />
 
-    {import.meta.env.PROD && (
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX" />
-      <script is:inline>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
-      </script>
-    )}
+    <!-- Google Tag Manager -->
+    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TLJJW85M');</script>
+    <!-- End Google Tag Manager -->
   </head>
 
-  <body class="flex min-h-screen flex-col bg-stone-50 text-stone-900 antialiased font-body">
+  <body class="flex min-h-screen flex-col bg-dark-900 text-stone-100 antialiased font-body">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TLJJW85M"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <Header />
     <main class="flex-1">
       <slot />
     </main>
     <Footer />
 
-    <!-- WhatsApp Floating Button -->
-    <a
-      href="https://wa.me/971503448933"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="fixed bottom-6 right-6 z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110"
-      aria-label="Chat on WhatsApp"
-    >
-      <svg viewBox="0 0 24 24" fill="currentColor" class="size-7">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-      </svg>
-    </a>
+    <!-- ── Floating CTA Stack (right side) ── -->
+    <div class="fixed bottom-5 right-4 z-50 flex flex-col items-center gap-3 sm:bottom-6 sm:right-6">
+
+      <!-- Location -->
+      <div class="group relative">
+        <a
+          href="https://maps.app.goo.gl/uDuBRuNgejb3Zjk37"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Get directions to Al Sham Palace"
+          class="flex size-13 items-center justify-center rounded-full bg-brand-500 shadow-xl shadow-brand-500/40 transition-all duration-300 group-hover:scale-110 group-hover:shadow-brand-500/60 sm:size-14"
+          style="width:3.25rem;height:3.25rem;"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-6 text-dark-900">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+        </a>
+        <!-- Tooltip -->
+        <span class="pointer-events-none absolute right-full mr-3 top-1/2 -translate-y-1/2 hidden sm:block whitespace-nowrap rounded-lg bg-dark-800/95 px-3 py-1.5 text-xs font-semibold text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <span class="en-text">Location</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">الموقع</span>
+        </span>
+      </div>
+
+      <!-- Call -->
+      <div class="group relative">
+        <a
+          href="tel:+971503448933"
+          aria-label="Call Al Sham Palace"
+          class="flex items-center justify-center rounded-full bg-dark-700/95 border-2 border-brand-500/70 shadow-xl shadow-brand-500/20 backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:bg-brand-500 group-hover:border-brand-500 group-hover:shadow-brand-500/50"
+          style="width:3.25rem;height:3.25rem;"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="size-6 text-brand-400 transition-colors group-hover:text-dark-900">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+          </svg>
+        </a>
+        <span class="pointer-events-none absolute right-full mr-3 top-1/2 -translate-y-1/2 hidden sm:block whitespace-nowrap rounded-lg bg-dark-800/95 px-3 py-1.5 text-xs font-semibold text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200">050 344 8933</span>
+      </div>
+
+      <!-- WhatsApp -->
+      <div class="group relative">
+        <a
+          href="https://wa.me/971503448933"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on WhatsApp"
+          class="relative flex items-center justify-center rounded-full bg-[#25D366] shadow-xl shadow-[#25D366]/40 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[#25D366]/60"
+          style="width:3.25rem;height:3.25rem;"
+        >
+          <svg viewBox="0 0 24 24" fill="white" class="size-6 transition-transform duration-300 group-hover:scale-110">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+          <span class="absolute inset-0 rounded-full ring-2 ring-[#25D366]/50 animate-ping"></span>
+        </a>
+        <span class="pointer-events-none absolute right-full mr-3 top-1/2 -translate-y-1/2 hidden sm:block whitespace-nowrap rounded-lg bg-dark-800/95 px-3 py-1.5 text-xs font-semibold text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200">WhatsApp</span>
+      </div>
+    </div>
   </body>
 </html>

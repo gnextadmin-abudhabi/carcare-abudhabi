@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { Icon } from 'astro-icon/components';
 import { business } from '../data/business';
 import { serviceTypes } from '../data/serviceTypes';
@@ -11,74 +10,125 @@ import { serviceAreas } from '../data/serviceAreas';
   title={`Contact Us | ${business.name}`}
   description={`Get in touch with ${business.name} for car service in Abu Dhabi. Call ${business.phone} or WhatsApp us. Home service available across all Abu Dhabi areas.`}
 >
-  <Breadcrumbs crumbs={[{ label: 'Contact' }]} />
 
-  <!-- ============ HEADER ============ -->
-  <section class="py-12 lg:py-16">
-    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════ -->
+  <section class="relative overflow-hidden bg-dark-900 py-20 lg:py-28">
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute -top-24 -right-24 size-[500px] rounded-full bg-brand-500/10 blur-[100px]"></div>
+      <div class="absolute bottom-0 left-0 size-[400px] rounded-full bg-brand-600/8 blur-[90px]"></div>
+    </div>
+    <div class="pointer-events-none absolute inset-0 opacity-25"
+      style="background-image:linear-gradient(rgba(245,166,35,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(245,166,35,0.06) 1px,transparent 1px);background-size:60px 60px;"></div>
+
+    <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
       <div class="max-w-3xl animate-fade-up">
-        <h1 class="font-display text-4xl text-brand-900 sm:text-5xl">
-          Contact {business.name}
+        <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-brand-500/25 bg-brand-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-400">
+          <Icon name="lucide:phone-call" class="size-3.5 shrink-0" />
+          <span class="en-text">Open Daily 9AM – 11:45PM</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">مفتوح يومياً 9 ص – 11:45 م</span>
+        </div>
+        <h1 class="font-display text-4xl leading-tight text-white sm:text-5xl lg:text-6xl">
+          <span class="en-text">Contact <span class="text-gradient-gold">Al Sham Palace</span></span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">تواصل مع <span class="text-gradient-gold">قصر الشام</span></span>
         </h1>
-        <p class="mt-4 text-lg leading-relaxed text-stone-600">
-          Need car service in Abu Dhabi? Call us, WhatsApp us, or use the form below. We are open daily from 9:00 AM to 11:45 PM and our mobile team can come to you.
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-stone-400">
+          <span class="en-text">Need car service in Abu Dhabi? Call us, WhatsApp us, or fill in the form below. Our mobile team can come to you anywhere — open daily 9AM to 11:45PM.</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">هل تحتاج خدمة سيارات في أبوظبي؟ اتصل بنا أو أرسل واتساب أو املأ النموذج أدناه. فريقنا المتنقل يصل إليك في أي مكان — مفتوح يومياً من 9 ص حتى 11:45 م.</span>
         </p>
+      </div>
+
+      <!-- Quick contact pills -->
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={business.phoneHref} class="btn-shine inline-flex items-center gap-2 rounded-2xl bg-brand-500 px-6 py-3 text-sm font-bold text-dark-900 shadow-xl shadow-brand-500/25 transition-all hover:bg-brand-400 hover:-translate-y-0.5">
+          <Icon name="lucide:phone" class="size-4 shrink-0" />
+          {business.phone}
+        </a>
+        <a href="https://wa.me/971503448933" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 rounded-2xl border border-[#25D366]/30 bg-[#25D366]/12 px-6 py-3 text-sm font-bold text-[#25D366] transition-all hover:bg-[#25D366]/22 hover:-translate-y-0.5">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="size-4 shrink-0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          <span class="en-text">WhatsApp Us</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">واتساب</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- ============ FORM + CONTACT INFO ============ -->
-  <section class="pb-16 lg:pb-24">
+
+  <!-- ═══════════════════════════════════════════
+       FORM + CONTACT INFO
+  ═══════════════════════════════════════════ -->
+  <section class="bg-dark-800 py-20 lg:py-28">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
-      <div class="grid gap-12 lg:grid-cols-5 lg:gap-16">
+      <div class="grid gap-10 lg:grid-cols-5 lg:gap-12">
+
         <!-- Left: Contact Form (3 cols) -->
         <div class="lg:col-span-3">
-          <div class="rounded-xl border border-stone-200 bg-white p-6 sm:p-8">
-            <h2 class="font-display text-2xl text-brand-900">Send Us a Message</h2>
+          <div class="rounded-2xl border border-white/8 bg-dark-700 p-6 sm:p-8">
+            <h2 class="font-display text-2xl text-white">
+              <span class="en-text">Send Us a Message</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">أرسل لنا رسالة</span>
+            </h2>
             <p class="mt-2 text-sm text-stone-500">
-              Fill out the form and we will get back to you as soon as possible.
+              <span class="en-text">Fill out the form and we will get back to you as soon as possible.</span>
+              <span class="ar-text" style="font-family:'Cairo',sans-serif">املأ النموذج وسنتواصل معك في أقرب وقت.</span>
             </p>
 
-            <form action="#" method="POST" class="mt-8 space-y-6">
-              <div class="grid gap-6 sm:grid-cols-2">
+            <!-- Success message (hidden by default) -->
+            <div id="form-success" style="display:none;" class="mt-8 rounded-2xl border border-green-500/30 bg-green-500/10 p-6 text-center">
+              <div class="mx-auto mb-3 flex size-14 items-center justify-center rounded-full bg-green-500/15">
+                <Icon name="lucide:check-circle" class="size-7 text-green-400" />
+              </div>
+              <h3 class="font-display text-lg text-white">
+                <span class="en-text">Message Sent!</span>
+                <span class="ar-text" style="font-family:'Cairo',sans-serif">تم إرسال الرسالة!</span>
+              </h3>
+              <p class="mt-2 text-sm text-stone-400">
+                <span class="en-text">Thank you! We will get back to you as soon as possible.</span>
+                <span class="ar-text" style="font-family:'Cairo',sans-serif">شكراً! سنتواصل معك في أقرب وقت ممكن.</span>
+              </p>
+            </div>
+
+            <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="mt-8 space-y-5">
+              <!-- Web3Forms hidden fields -->
+              <input type="hidden" name="access_key" value="fa149918-2614-4a50-a4f9-1aa4118828ae" />
+              <input type="hidden" name="subject" value="New Contact Form — Al Sham Palace Auto Car Service" />
+              <input type="hidden" name="from_name" value="Al Sham Palace Website" />
+              <!-- Honeypot spam protection -->
+              <input type="checkbox" name="botcheck" style="display:none;" />
+
+              <div class="grid gap-5 sm:grid-cols-2">
                 <div>
-                  <label for="name" class="block text-sm font-medium text-stone-700">
-                    Full Name <span class="text-red-500">*</span>
+                  <label for="name" class="block text-sm font-medium text-stone-300">
+                    <span class="en-text">Full Name <span class="text-red-400">*</span></span>
+                    <span class="ar-text" style="font-family:'Cairo',sans-serif">الاسم الكامل <span class="text-red-400">*</span></span>
                   </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
+                  <input type="text" id="name" name="name" required
                     placeholder="Your name"
-                    class="mt-1.5 w-full rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
+                    class="mt-1.5 w-full rounded-xl border border-white/10 bg-dark-800 px-4 py-2.5 text-sm text-white placeholder-stone-600 transition-all focus:border-brand-500/60 focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label for="phone" class="block text-sm font-medium text-stone-700">
-                    Phone / WhatsApp <span class="text-red-500">*</span>
+                  <label for="phone" class="block text-sm font-medium text-stone-300">
+                    <span class="en-text">Phone / WhatsApp <span class="text-red-400">*</span></span>
+                    <span class="ar-text" style="font-family:'Cairo',sans-serif">الهاتف / واتساب <span class="text-red-400">*</span></span>
                   </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
+                  <input type="tel" id="phone" name="phone" required
                     placeholder="050 XXX XXXX"
-                    class="mt-1.5 w-full rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
+                    class="mt-1.5 w-full rounded-xl border border-white/10 bg-dark-800 px-4 py-2.5 text-sm text-white placeholder-stone-600 transition-all focus:border-brand-500/60 focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div class="grid gap-6 sm:grid-cols-2">
+              <div class="grid gap-5 sm:grid-cols-2">
                 <div>
-                  <label for="service" class="block text-sm font-medium text-stone-700">
-                    Service Needed
+                  <label for="service" class="block text-sm font-medium text-stone-300">
+                    <span class="en-text">Service Needed</span>
+                    <span class="ar-text" style="font-family:'Cairo',sans-serif">الخدمة المطلوبة</span>
                   </label>
-                  <select
-                    id="service"
-                    name="service"
-                    class="mt-1.5 w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
-                  >
+                  <select id="service" name="service"
+                    class="mt-1.5 w-full rounded-xl border border-white/10 bg-dark-800 px-4 py-2.5 text-sm text-white transition-all focus:border-brand-500/60 focus:ring-2 focus:ring-brand-500/20 focus:outline-none">
                     <option value="">Select a service</option>
                     {serviceTypes.map((service) => (
                       <option value={service.slug}>{service.name}</option>
@@ -87,14 +137,12 @@ import { serviceAreas } from '../data/serviceAreas';
                   </select>
                 </div>
                 <div>
-                  <label for="area" class="block text-sm font-medium text-stone-700">
-                    Your Area
+                  <label for="area" class="block text-sm font-medium text-stone-300">
+                    <span class="en-text">Your Area</span>
+                    <span class="ar-text" style="font-family:'Cairo',sans-serif">منطقتك</span>
                   </label>
-                  <select
-                    id="area"
-                    name="area"
-                    class="mt-1.5 w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
-                  >
+                  <select id="area" name="area"
+                    class="mt-1.5 w-full rounded-xl border border-white/10 bg-dark-800 px-4 py-2.5 text-sm text-white transition-all focus:border-brand-500/60 focus:ring-2 focus:ring-brand-500/20 focus:outline-none">
                     <option value="">Select your area</option>
                     {serviceAreas.map((area) => (
                       <option value={area.slug}>{area.name}</option>
@@ -105,127 +153,154 @@ import { serviceAreas } from '../data/serviceAreas';
               </div>
 
               <div>
-                <label for="message" class="block text-sm font-medium text-stone-700">
-                  Message <span class="text-red-500">*</span>
+                <label for="message" class="block text-sm font-medium text-stone-300">
+                  <span class="en-text">Message <span class="text-red-400">*</span></span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">الرسالة <span class="text-red-400">*</span></span>
                 </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows="5"
+                <textarea id="message" name="message" required rows="5"
                   placeholder="Describe what your car needs or the issue you are facing..."
-                  class="mt-1.5 w-full rounded-lg border border-stone-300 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none"
+                  class="mt-1.5 w-full rounded-xl border border-white/10 bg-dark-800 px-4 py-2.5 text-sm text-white placeholder-stone-600 transition-all focus:border-brand-500/60 focus:ring-2 focus:ring-brand-500/20 focus:outline-none resize-none"
                 ></textarea>
               </div>
 
-              <button
-                type="submit"
-                class="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-800 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-700 hover:shadow-md sm:w-auto"
-              >
-                <Icon name="lucide:send" class="size-4" />
-                Send Message
+              <button type="submit" id="submit-btn"
+                class="btn-shine inline-flex items-center gap-2 rounded-2xl bg-brand-500 px-7 py-3.5 text-sm font-bold text-dark-900 shadow-xl shadow-brand-500/25 transition-all hover:bg-brand-400 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed">
+                <Icon name="lucide:send" class="size-4 shrink-0" />
+                <span id="btn-label-en" class="en-text">Send Message</span>
+                <span id="btn-label-ar" class="ar-text" style="font-family:'Cairo',sans-serif">إرسال الرسالة</span>
               </button>
             </form>
+
+            <script is:inline>
+              (function () {
+                var form = document.getElementById('contact-form');
+                var successBox = document.getElementById('form-success');
+                var submitBtn = document.getElementById('submit-btn');
+                var btnEn = document.getElementById('btn-label-en');
+                var btnAr = document.getElementById('btn-label-ar');
+
+                if (!form) return;
+
+                form.addEventListener('submit', function (e) {
+                  e.preventDefault();
+                  submitBtn.disabled = true;
+                  if (btnEn) btnEn.textContent = 'Sending…';
+                  if (btnAr) btnAr.textContent = 'جارٍ الإرسال…';
+
+                  var data = new FormData(form);
+
+                  fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: data,
+                  })
+                    .then(function (res) { return res.json(); })
+                    .then(function (json) {
+                      if (json.success) {
+                        form.style.display = 'none';
+                        if (successBox) successBox.style.display = 'block';
+                      } else {
+                        submitBtn.disabled = false;
+                        if (btnEn) btnEn.textContent = 'Send Message';
+                        if (btnAr) btnAr.textContent = 'إرسال الرسالة';
+                        alert('Something went wrong. Please call us on 050 344 8933.');
+                      }
+                    })
+                    .catch(function () {
+                      submitBtn.disabled = false;
+                      if (btnEn) btnEn.textContent = 'Send Message';
+                      if (btnAr) btnAr.textContent = 'إرسال الرسالة';
+                      alert('Network error. Please call us on 050 344 8933.');
+                    });
+                });
+              })();
+            </script>
           </div>
         </div>
 
-        <!-- Right: Contact Info Card (2 cols) -->
-        <div class="lg:col-span-2">
-          <div class="rounded-xl border border-stone-200 bg-white p-6 sm:p-8">
-            <h2 class="font-display text-2xl text-brand-900">Contact Information</h2>
+        <!-- Right: Contact Info (2 cols) -->
+        <div class="lg:col-span-2 space-y-5">
+          <!-- Info cards -->
+          {[
+            { icon: 'lucide:phone', labelEn: 'Phone', labelAr: 'الهاتف', valueEn: business.phone, href: business.phoneHref },
+            { icon: 'lucide:mail',  labelEn: 'Email',  labelAr: 'البريد الإلكتروني', valueEn: business.email, href: `mailto:${business.email}` },
+          ].map(({ icon, labelEn, labelAr, valueEn, href }) => (
+            <a href={href} class="card-glow flex items-center gap-4 rounded-2xl border border-white/8 bg-dark-700 p-5 transition-all hover:border-brand-500/30">
+              <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-500/12 text-brand-400">
+                <Icon name={icon} class="size-5" />
+              </div>
+              <div>
+                <p class="text-xs text-stone-500">
+                  <span class="en-text">{labelEn}</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">{labelAr}</span>
+                </p>
+                <p class="text-sm font-semibold text-white">{valueEn}</p>
+              </div>
+            </a>
+          ))}
 
-            <ul class="mt-6 space-y-5">
-              <li class="flex items-start gap-3">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50">
-                  <Icon name="lucide:phone" class="size-5 text-brand-700" />
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-stone-700">Phone</p>
-                  <a
-                    href={business.phoneHref}
-                    class="text-sm text-brand-700 transition-colors hover:text-brand-900"
-                  >
-                    {business.phone}
-                  </a>
-                </div>
-              </li>
+          <!-- WhatsApp -->
+          <a href="https://wa.me/971503448933" target="_blank" rel="noopener noreferrer"
+             class="card-glow flex items-center gap-4 rounded-2xl border border-[#25D366]/20 bg-dark-700 p-5 transition-all hover:border-[#25D366]/40">
+            <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#25D366]/12 text-[#25D366]">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="size-5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            </div>
+            <div>
+              <p class="text-xs text-stone-500">WhatsApp</p>
+              <p class="text-sm font-semibold text-[#25D366]">
+                <span class="en-text">Chat on WhatsApp</span>
+                <span class="ar-text" style="font-family:'Cairo',sans-serif">تواصل عبر واتساب</span>
+              </p>
+            </div>
+          </a>
 
-              <li class="flex items-start gap-3">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50">
-                  <svg class="size-5 text-brand-700" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-stone-700">WhatsApp</p>
-                  <a
-                    href="https://wa.me/971503448933"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-sm text-brand-700 transition-colors hover:text-brand-900"
-                  >
-                    Chat on WhatsApp
-                  </a>
-                </div>
-              </li>
+          <!-- Location -->
+          <div class="card-glow rounded-2xl border border-white/8 bg-dark-700 p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-500/12 text-brand-400">
+                <Icon name="lucide:map-pin" class="size-5" />
+              </div>
+              <div>
+                <p class="text-xs text-stone-500">
+                  <span class="en-text">Workshop Location</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">موقع الورشة</span>
+                </p>
+                <p class="text-sm font-semibold text-white">{business.address.street}, {business.address.city}</p>
+                <p class="mt-0.5 text-xs text-stone-500">Abu Dhabi, UAE</p>
+              </div>
+            </div>
+          </div>
 
-              <li class="flex items-start gap-3">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50">
-                  <Icon name="lucide:mail" class="size-5 text-brand-700" />
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-stone-700">Email</p>
-                  <a
-                    href={`mailto:${business.email}`}
-                    class="text-sm text-brand-700 transition-colors hover:text-brand-900"
-                  >
-                    {business.email}
-                  </a>
-                </div>
-              </li>
+          <!-- Hours -->
+          <div class="card-glow rounded-2xl border border-white/8 bg-dark-700 p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-500/12 text-brand-400">
+                <Icon name="lucide:clock" class="size-5" />
+              </div>
+              <div>
+                <p class="text-xs text-stone-500 mb-2">
+                  <span class="en-text">Business Hours</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">ساعات العمل</span>
+                </p>
+                {business.hours.map((schedule) => (
+                  <p class="text-sm text-stone-300"><span class="font-semibold text-white">{schedule.days}:</span> {schedule.hours}</p>
+                ))}
+              </div>
+            </div>
+          </div>
 
-              <li class="flex items-start gap-3">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50">
-                  <Icon name="lucide:map-pin" class="size-5 text-brand-700" />
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-stone-700">Workshop Location</p>
-                  <p class="text-sm text-stone-600">
-                    {business.address.street}, {business.address.city}, {business.address.country}
-                  </p>
-                </div>
-              </li>
-
-              <li class="flex items-start gap-3">
-                <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-brand-50">
-                  <Icon name="lucide:clock" class="size-5 text-brand-700" />
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-stone-700">Business Hours</p>
-                  <div class="mt-1 space-y-0.5 text-sm text-stone-600">
-                    {business.hours.map((schedule) => (
-                      <p>
-                        <span class="font-medium">{schedule.days}:</span> {schedule.hours}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              </li>
-            </ul>
-
-            <div class="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-4">
-              <div class="flex items-start gap-3">
-                <Icon name="lucide:alert-triangle" class="mt-0.5 size-5 shrink-0 text-amber-600" />
-                <div>
-                  <p class="text-sm font-semibold text-amber-800">Breakdown or Emergency?</p>
-                  <p class="mt-1 text-sm text-amber-700">
-                    Dead battery, flat tyre, or breakdown on the road? Call us immediately at
-                    <a href={business.phoneHref} class="font-semibold underline">
-                      {business.phone}
-                    </a>
-                    and our mobile team will reach you as fast as possible.
-                  </p>
-                </div>
+          <!-- Emergency alert -->
+          <div class="rounded-2xl border border-amber-500/25 bg-amber-500/8 p-5">
+            <div class="flex items-start gap-3">
+              <Icon name="lucide:alert-triangle" class="mt-0.5 size-5 shrink-0 text-amber-400" />
+              <div>
+                <p class="text-sm font-semibold text-amber-300">
+                  <span class="en-text">Breakdown or Emergency?</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">عطل أو حالة طارئة؟</span>
+                </p>
+                <p class="mt-1 text-sm text-amber-400/80">
+                  <span class="en-text">Dead battery, flat tyre, or breakdown? Call <a href={business.phoneHref} class="font-semibold text-amber-300 underline">{business.phone}</a> — our mobile team responds fast.</span>
+                  <span class="ar-text" style="font-family:'Cairo',sans-serif">بطارية فارغة أو إطار مثقوب أو عطل؟ اتصل بـ <a href={business.phoneHref} class="font-semibold text-amber-300 underline">{business.phone}</a> — فريقنا المتنقل يصل بسرعة.</span>
+                </p>
               </div>
             </div>
           </div>
@@ -233,4 +308,58 @@ import { serviceAreas } from '../data/serviceAreas';
       </div>
     </div>
   </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       GOOGLE MAP EMBED
+  ═══════════════════════════════════════════ -->
+  <section class="bg-dark-900 py-20 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center mb-10">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">
+          <span class="en-text">Find Us</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">موقعنا</span>
+        </p>
+        <h2 class="mt-3 font-display text-3xl text-white sm:text-4xl">
+          <span class="en-text">Our Workshop in <span class="text-gradient-gold">MBZ City, Abu Dhabi</span></span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">ورشتنا في <span class="text-gradient-gold">مدينة محمد بن زايد</span></span>
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl text-stone-400">
+          <span class="en-text">{business.address.street}, {business.address.city}, Abu Dhabi, UAE</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">{business.address.street}، مدينة محمد بن زايد، أبوظبي، الإمارات</span>
+        </p>
+      </div>
+
+      <!-- Map iframe -->
+      <div class="overflow-hidden rounded-2xl border border-white/8 shadow-2xl">
+        <iframe
+          src="https://maps.google.com/maps?q=Al+Sham+Palace+Auto+Car+Service+Mohamed+Bin+Zayed+City+Abu+Dhabi&hl=en&z=17&output=embed"
+          width="100%"
+          height="480"
+          style="border:0;display:block;"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Al Sham Palace Auto Car Service — Mohamed Bin Zayed City, Abu Dhabi"
+        ></iframe>
+      </div>
+
+      <!-- Directions button -->
+      <div class="mt-6 flex flex-wrap justify-center gap-4">
+        <a href="https://maps.app.goo.gl/uDuBRuNgejb3Zjk37" target="_blank" rel="noopener noreferrer"
+           class="btn-shine inline-flex items-center gap-2 rounded-2xl bg-brand-500 px-7 py-3.5 text-sm font-bold text-dark-900 shadow-xl shadow-brand-500/25 transition-all hover:bg-brand-400 hover:-translate-y-0.5">
+          <Icon name="lucide:navigation" class="size-4 shrink-0" />
+          <span class="en-text">Get Directions</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">احصل على الاتجاهات</span>
+        </a>
+        <a href={business.phoneHref}
+           class="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/6 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/12 hover:-translate-y-0.5">
+          <Icon name="lucide:phone" class="size-4 shrink-0" />
+          <span class="en-text">Call for Help Finding Us</span>
+          <span class="ar-text" style="font-family:'Cairo',sans-serif">اتصل للمساعدة في إيجادنا</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>

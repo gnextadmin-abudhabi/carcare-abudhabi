@@ -2,12 +2,13 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Typography */
-  --font-display: 'DM Serif Display', serif;
-  --font-body: 'DM Sans', sans-serif;
+  /* ── Typography ────────────────────────────────── */
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-arabic:  'Cairo', sans-serif;
 
-  /* Brand Palette — Al Sham Palace Gold #F5A623 as brand-500 */
-  --color-brand-50: #fffbeb;
+  /* ── Brand Palette — Gold #F5A623 ──────────────── */
+  --color-brand-50:  #fffbeb;
   --color-brand-100: #fef3c7;
   --color-brand-200: #fce59a;
   --color-brand-300: #fad166;
@@ -19,8 +20,14 @@
   --color-brand-900: #5a390b;
   --color-brand-950: #2d1b04;
 
-  /* Stone neutrals */
-  --color-stone-50: #fafaf9;
+  /* ── Dark surfaces ─────────────────────────────── */
+  --color-dark-900: #0a0a0a;
+  --color-dark-800: #111111;
+  --color-dark-700: #1a1a1a;
+  --color-dark-600: #222222;
+
+  /* ── Stone neutrals ────────────────────────────── */
+  --color-stone-50:  #fafaf9;
   --color-stone-100: #f5f5f4;
   --color-stone-200: #e7e5e4;
   --color-stone-300: #d6d3d1;
@@ -32,150 +39,146 @@
   --color-stone-900: #1c1917;
   --color-stone-950: #0c0a09;
 
-  /* Amber accent */
-  --color-amber-50: #fffbeb;
-  --color-amber-100: #fef3c7;
-  --color-amber-200: #fde68a;
-  --color-amber-300: #fcd34d;
+  /* ── Amber accent ──────────────────────────────── */
   --color-amber-400: #fbbf24;
   --color-amber-500: #f59e0b;
-  --color-amber-600: #d97706;
-  --color-amber-700: #b45309;
-  --color-amber-800: #92400e;
-  --color-amber-900: #78350f;
-  --color-amber-950: #451a03;
 
-  /* Animations */
-  --animate-fade-up: fadeUp 0.6s ease-out both;
-  --animate-fade-in: fadeIn 0.5s ease-out both;
+  /* ── Animations ────────────────────────────────── */
+  --animate-fade-up:    fadeUp    0.7s cubic-bezier(0.22,1,0.36,1) both;
+  --animate-fade-in:    fadeIn    0.5s ease-out both;
   --animate-slide-down: slideDown 0.4s ease-out both;
-  --animate-scale-in: scaleIn 0.3s ease-out both;
+  --animate-scale-in:   scaleIn   0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+  --animate-float:      float     5s   ease-in-out infinite;
+  --animate-marquee:    marquee   35s  linear infinite;
+  --animate-marquee2:   marquee2  35s  linear infinite;
+  --animate-shimmer:    shimmer   2.5s linear infinite;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+/* ─── Keyframes ────────────────────────────────────── */
+@keyframes fadeUp    { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn    { from{opacity:0} to{opacity:1} }
+@keyframes slideDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes scaleIn   { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
+@keyframes float     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+@keyframes marquee   { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes marquee2  { from{transform:translateX(50%)} to{transform:translateX(0)} }
+@keyframes shimmer   { from{background-position:-200% center} to{background-position:200% center} }
+@keyframes pulse-ring { 0%{transform:scale(1);opacity:0.6} 100%{transform:scale(1.5);opacity:0} }
+
+/* ─── Stagger delays ───────────────────────────────── */
+@utility stagger-1 { animation-delay:0.08s }
+@utility stagger-2 { animation-delay:0.16s }
+@utility stagger-3 { animation-delay:0.24s }
+@utility stagger-4 { animation-delay:0.32s }
+@utility stagger-5 { animation-delay:0.40s }
+@utility stagger-6 { animation-delay:0.48s }
+
+/* ─── Glass utilities ──────────────────────────────── */
+@utility glass      { background:rgba(255,255,255,0.06);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid rgba(255,255,255,0.10) }
+@utility glass-gold { background:rgba(245,166,35,0.08);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(245,166,35,0.20) }
+@utility glass-dark { background:rgba(0,0,0,0.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.06) }
+
+/* ─── Gradient text ────────────────────────────────── */
+@utility text-gradient-gold {
+  background:linear-gradient(135deg,#fad166 0%,#f5a623 45%,#d4860a 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+@utility text-gradient-white {
+  background:linear-gradient(135deg,#ffffff 0%,#e2c97e 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+/* ─── Mobile-first safe area + body padding ────────── */
+body { padding-bottom: env(safe-area-inset-bottom); }
+/* Ensure content isn't hidden behind floating CTAs on mobile */
+main > section:last-of-type { padding-bottom: max(5rem, calc(4rem + env(safe-area-inset-bottom))); }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* ─── English Type Scale ────────────────────────────── */
+/* H1 36px·700  H2 24px·700  H3 18px·600  Body 16px·400  Small 13px·400 */
+h1 { font-size: 2.25rem;  font-weight: 700; line-height: 1.1; }
+h2 { font-size: 1.5rem;   font-weight: 700; line-height: 1.2; }
+h3 { font-size: 1.125rem; font-weight: 600; line-height: 1.3; }
+body { font-size: 1rem; font-weight: 400; }
+small, .text-small { font-size: 0.8125rem; font-weight: 400; }
 
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
-}
+/* ─── Arabic Type Scale ─────────────────────────────── */
+/* H1 32px·800  H2 22px·700  H3 16px·700  Body 16px·400  Small 13px·400 */
+html.ar h1 { font-size: 2rem;    font-weight: 800; }
+html.ar h2 { font-size: 1.375rem; font-weight: 700; }
+html.ar h3 { font-size: 1rem;    font-weight: 700; }
 
-@utility stagger-1 { animation-delay: 0.1s; }
-@utility stagger-2 { animation-delay: 0.2s; }
-@utility stagger-3 { animation-delay: 0.3s; }
-@utility stagger-4 { animation-delay: 0.4s; }
-@utility stagger-5 { animation-delay: 0.5s; }
-@utility stagger-6 { animation-delay: 0.6s; }
+/* ─── Arabic / RTL language mode ───────────────────── */
+.ar-text { display:none }
+html.ar .ar-text { display:revert }
+html.ar .en-text { display:none !important }
+html.ar { font-family:'Cairo','Inter',sans-serif }
+html.ar .font-display { letter-spacing:0;line-height:1.35 }
+html[dir="rtl"] .rtl-flip { transform:scaleX(-1);display:inline-block }
+html.ar p,html.ar h1,html.ar h2,html.ar h3,html.ar li { text-align:right }
 
-@utility glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-@utility glass-dark {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-@utility editorial-line {
-  position: relative;
-  padding-left: 1.25rem;
-}
-
+/* ─── Component layer ──────────────────────────────── */
 @layer components {
-  .editorial-line::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--color-brand-500);
-    border-radius: 9999px;
-  }
 
+  /* ── Hover card lift ── */
   .card-hover {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition:transform 0.32s cubic-bezier(0.34,1.2,0.64,1),box-shadow 0.32s ease;
   }
-
   .card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow:
-      0 10px 25px -5px rgba(0, 0, 0, 0.1),
-      0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    transform:translateY(-8px) scale(1.01);
+    box-shadow:0 24px 48px -12px rgba(0,0,0,0.22),0 8px 16px -8px rgba(0,0,0,0.12);
   }
 
-  .prose-editorial {
-    font-family: var(--font-body);
-    line-height: 1.8;
-    color: var(--color-stone-700);
+  /* ── Gold glow card ── */
+  .card-glow {
+    transition:transform 0.32s cubic-bezier(0.34,1.15,0.64,1),box-shadow 0.32s ease,border-color 0.3s ease;
+    will-change:transform;
+  }
+  .card-glow:hover {
+    transform:translateY(-7px) scale(1.015);
+    box-shadow:0 0 0 1px rgba(245,166,35,0.28),0 24px 48px -12px rgba(245,166,35,0.16),0 8px 20px -6px rgba(0,0,0,0.18);
+    border-color:rgba(245,166,35,0.32) !important;
   }
 
-  .prose-editorial h1,
-  .prose-editorial h2,
-  .prose-editorial h3,
-  .prose-editorial h4 {
-    font-family: var(--font-display);
-    color: var(--color-stone-900);
-    line-height: 1.3;
+  /* ── Shine button ── */
+  .btn-shine {
+    position:relative;overflow:hidden;
+  }
+  .btn-shine::after {
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.25) 50%,transparent 60%);
+    background-size:200% 100%;
+    animation:shimmer 2.8s linear infinite;
   }
 
-  .prose-editorial h2 {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-    font-size: 1.625rem;
+  /* ── Marquee tracks ── */
+  .marquee-track  { display:flex;width:max-content;animation:marquee  35s linear infinite }
+  .marquee-track2 { display:flex;width:max-content;animation:marquee2 35s linear infinite }
+  .marquee-track:hover,.marquee-track2:hover { animation-play-state:paused }
+
+  /* ── Section divider ── */
+  .divider-gold {
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(245,166,35,0.5) 50%,transparent);
+    border:none;
   }
 
-  .prose-editorial h3 {
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem;
+  /* ── Pulse ring for WhatsApp ── */
+  .pulse-ring {
+    animation:pulse-ring 2s cubic-bezier(0.4,0,0.6,1) infinite;
   }
 
-  .prose-editorial a {
-    color: var(--color-brand-700);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
+  /* ── Prose editorial ── */
+  .prose-editorial { font-family:var(--font-body);line-height:1.85;color:var(--color-stone-300) }
+  .prose-editorial h2,.prose-editorial h3,.prose-editorial h4 { font-family:var(--font-display);color:#fff;line-height:1.3 }
+  .prose-editorial h2 { margin-top:2.5rem;margin-bottom:1rem;font-size:1.625rem }
+  .prose-editorial h3 { margin-top:2rem;margin-bottom:.75rem;font-size:1.25rem }
+  .prose-editorial a  { color:var(--color-brand-400);text-decoration:underline;text-underline-offset:2px }
+  .prose-editorial a:hover { color:var(--color-brand-300) }
+  .prose-editorial ul { list-style-type:disc;padding-left:1.5rem }
+  .prose-editorial ol { list-style-type:decimal;padding-left:1.5rem }
+  .prose-editorial li { margin-bottom:.5rem }
 
-  .prose-editorial a:hover {
-    color: var(--color-brand-500);
-  }
-
-  .prose-editorial blockquote {
-    border-left: 3px solid var(--color-brand-400);
-    padding-left: 1.25rem;
-    font-style: italic;
-    color: var(--color-stone-600);
-  }
-
-  .prose-editorial ul {
-    list-style-type: disc;
-    padding-left: 1.5rem;
-  }
-
-  .prose-editorial ol {
-    list-style-type: decimal;
-    padding-left: 1.5rem;
-  }
-
-  .prose-editorial li {
-    margin-bottom: 0.5rem;
-  }
+  /* ── Tilt card 3-D hover ── */
+  .tilt-card { transition:transform 0.3s ease,box-shadow 0.3s ease }
+  .tilt-card:hover { transform:perspective(800px) rotateY(-4deg) rotateX(2deg) translateY(-6px) }
 }
