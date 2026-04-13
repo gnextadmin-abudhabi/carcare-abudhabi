@@ -8,7 +8,9 @@ import { serviceUrl, areaUrl, contactUrl } from '../lib/urls';
 import { reviews } from '../data/seoContent';
 
 const years = yearsInBusiness();
-const avgRating = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+// Real Google Business Profile rating and review count
+const avgRating = '4.5';
+const totalReviews = 379;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -88,7 +90,7 @@ const schema = {
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: avgRating,
-        reviewCount: reviews.length,
+        reviewCount: totalReviews,
         bestRating: '5',
         worstRating: '1',
       },
@@ -138,7 +140,7 @@ const statsData = [
   { value: `${years}+`, icon: 'lucide:calendar', en: 'Years in Business',  ar: 'سنة في الخدمة' },
   { value: '20+',       icon: 'lucide:map-pin',  en: 'Areas Covered',      ar: 'منطقة مغطاة' },
   { value: '8',         icon: 'lucide:wrench',   en: 'Services Offered',   ar: 'خدمة متوفرة' },
-  { value: avgRating,   icon: 'lucide:star',     en: 'Average Rating',     ar: 'متوسط التقييم' },
+  { value: `${avgRating}★`, icon: 'lucide:star', en: `Google Rating (${totalReviews})`, ar: `تقييم جوجل (${totalReviews})` },
 ];
 ---
 
@@ -414,7 +416,7 @@ const statsData = [
           </div>
           <span class="text-xl font-bold text-white">{avgRating}</span>
           <span class="text-sm text-stone-500">
-            / 5 · {reviews.length}&nbsp;
+            / 5 · {totalReviews}&nbsp;
             <span class="en-text">reviews</span>
             <span class="ar-text" style="font-family:'Cairo',sans-serif">تقييم</span>
           </span>
