@@ -1,0 +1,50 @@
+---
+import { business } from '../data/business';
+
+interface Props {
+  titleEn?: string;
+  titleAr?: string;
+  subtitleEn?: string;
+  subtitleAr?: string;
+}
+
+const {
+  titleEn = 'Ready to Book Your Car Service?',
+  titleAr = 'هل أنت مستعد لحجز خدمة سيارتك؟',
+  subtitleEn = 'Call or WhatsApp us now — we serve all Abu Dhabi areas and can come to you.',
+  subtitleAr = 'اتصل بنا أو راسلنا عبر واتساب الآن، نخدم جميع مناطق أبوظبي ويمكننا المجيء إليك.',
+} = Astro.props;
+---
+
+<section class="dark-section py-14">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-3">
+      <span data-en>{titleEn}</span>
+      <span data-ar style="display:none">{titleAr}</span>
+    </h2>
+    <p class="text-[#aaa] mb-8">
+      <span data-en>{subtitleEn}</span>
+      <span data-ar style="display:none">{subtitleAr}</span>
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href={`tel:${business.phone}`} class="btn-primary text-base justify-center">
+        📞
+        <span data-en>Call {business.phoneDisplay}</span>
+        <span data-ar style="display:none">اتصل {business.phoneDisplay}</span>
+      </a>
+      <a
+        href={`https://wa.me/${business.whatsapp}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-secondary text-base justify-center"
+      >
+        <span data-en>💬 WhatsApp Us</span>
+        <span data-ar style="display:none">💬 واتساب</span>
+      </a>
+    </div>
+    <p class="text-[#666] text-sm mt-6">
+      <span data-en>Open Daily 9:00 AM - 11:45 PM | Home Service Available Across Abu Dhabi</span>
+      <span data-ar style="display:none">مفتوح يومياً 9:00 ص - 11:45 م | خدمة منزلية في جميع أنحاء أبوظبي</span>
+    </p>
+  </div>
+</section>

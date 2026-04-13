@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { Icon } from 'astro-icon/components';
+import { business, yearsInBusiness } from '../data/business';
+import { serviceAreas } from '../data/serviceAreas';
+import { areaUrl, contactUrl } from '../lib/urls';
+
+const years = yearsInBusiness();
+---
+
+<BaseLayout
+  title={`About ${business.name} | Abu Dhabi Car Service Since 1999`}
+  description={`Learn about ${business.name}, serving Abu Dhabi since ${business.yearEstablished}. ${years}+ years of trusted car accessories, tyre, AC, mechanical, and mobile home service across all Abu Dhabi areas.`}
+>
+  <Breadcrumbs crumbs={[{ label: 'About' }]} />
+
+  <!-- ============ HEADER ============ -->
+  <section class="py-12 lg:py-16">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="max-w-3xl animate-fade-up">
+        <h1 class="font-display text-4xl text-brand-900 sm:text-5xl">
+          About {business.name}
+        </h1>
+        <p class="mt-4 text-lg leading-relaxed text-stone-600">
+          Abu Dhabi's most trusted full-service auto care centre. Serving every area of Abu Dhabi since {business.yearEstablished} with quality, honesty, and the convenience of home service.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OUR STORY ============ -->
+  <section class="pb-16 lg:pb-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+        <!-- Story content -->
+        <div class="prose-editorial">
+          <h2>Our Story</h2>
+          <p>
+            {business.name} was founded in {business.yearEstablished} with a straightforward goal: provide honest, high-quality car services to the residents of Abu Dhabi at fair prices.
+          </p>
+          <p>
+            What began as a small car accessories shop in Mohamed Bin Zayed City has grown into one of Abu Dhabi's most comprehensive auto care centres, with over {years} years of experience serving UAE residents. Today, we provide everything from car accessories and tyre services to AC repair, mechanical works, electrical diagnostics, and a popular mobile home service.
+          </p>
+          <p>
+            We believe in doing the job right the first time, using quality parts, and treating every customer with respect. That approach has earned us a loyal base of repeat customers who have been coming to us for a decade or more.
+          </p>
+          <p>
+            Whether it is a quick tyre change at your home, a full AC overhaul at our workshop, or a set of premium car accessories — we handle it all with the same care and professionalism that has defined our business since 1999.
+          </p>
+        </div>
+
+        <!-- Trust signals -->
+        <div>
+          <div class="rounded-xl border border-stone-200 bg-white p-8">
+            <div class="flex items-center gap-4">
+              <div class="flex size-16 items-center justify-center rounded-full bg-brand-100">
+                <Icon name="lucide:award" class="size-8 text-brand-700" />
+              </div>
+              <div>
+                <h3 class="font-display text-xl text-brand-900">{years}+ Years of Excellence</h3>
+                <p class="text-sm text-stone-500">Trusted since {business.yearEstablished}</p>
+              </div>
+            </div>
+            <div class="mt-6 space-y-4">
+              {[
+                { icon: 'lucide:check-circle', text: 'Full-service auto care centre — accessories, tyres, AC, mechanical, electrical' },
+                { icon: 'lucide:home', text: 'Mobile home service available across all Abu Dhabi areas' },
+                { icon: 'lucide:clock', text: 'Open daily 9:00 AM to 11:45 PM — seven days a week' },
+                { icon: 'lucide:map-pin', text: 'Based in Mohamed Bin Zayed City — serving all of Abu Dhabi' },
+                { icon: 'lucide:users', text: 'Certified, experienced technicians for all car makes and models' },
+                { icon: 'lucide:shield-check', text: 'Transparent pricing — no hidden charges, ever' },
+              ].map((item) => (
+                <div class="flex items-start gap-3">
+                  <Icon name={item.icon} class="mt-0.5 size-5 shrink-0 text-brand-600" />
+                  <span class="text-sm text-stone-700">{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Contact CTA -->
+          <div class="mt-6 rounded-xl bg-brand-900 p-6">
+            <h3 class="font-display text-lg text-white">Ready to Book?</h3>
+            <p class="mt-2 text-sm text-brand-200">
+              Call us or WhatsApp for fast service across Abu Dhabi.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <a
+                href={business.phoneHref}
+                class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-brand-950 transition-all hover:bg-amber-400"
+              >
+                <Icon name="lucide:phone" class="size-4" />
+                {business.phone}
+              </a>
+              <a
+                href={contactUrl()}
+                class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white/20"
+              >
+                Contact Us
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICE AREAS ============ -->
+  <section class="border-t border-stone-200/60 bg-stone-50 py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <h2 class="font-display text-3xl text-brand-900 sm:text-4xl">
+          Areas We Serve
+        </h2>
+        <p class="mx-auto mt-4 max-w-2xl text-stone-600">
+          Our workshop is based in Mohamed Bin Zayed City. We provide home service and workshop service to all of Abu Dhabi except the Western Region and Al Ain.
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {serviceAreas.map((area) => (
+          <a
+            href={areaUrl(area.slug)}
+            class="group flex items-center gap-2.5 rounded-lg border border-stone-200 bg-white px-4 py-3 transition-all hover:border-brand-300 hover:bg-brand-50"
+          >
+            <Icon name="lucide:map-pin" class="size-4 shrink-0 text-brand-500" />
+            <span class="text-sm font-medium text-stone-700 group-hover:text-brand-800">
+              {area.name}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

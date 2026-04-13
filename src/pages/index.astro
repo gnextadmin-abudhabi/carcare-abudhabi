@@ -1,0 +1,517 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { business, yearsInBusiness } from '../data/business';
+import { serviceTypes } from '../data/serviceTypes';
+import { serviceAreas } from '../data/serviceAreas';
+import { serviceUrl, areaUrl, contactUrl } from '../lib/urls';
+import { reviews } from '../data/seoContent';
+
+const years = yearsInBusiness();
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${business.website}/#website`,
+      url: business.website,
+      name: business.name,
+      description: business.description,
+      publisher: { '@id': `${business.website}/#business` },
+    },
+    {
+      '@type': 'AutoRepair',
+      '@id': `${business.website}/#business`,
+      name: business.name,
+      legalName: business.legalName,
+      url: business.website,
+      telephone: business.phone,
+      email: business.email,
+      description: business.description,
+      founder: {
+        '@type': 'Person',
+        name: business.owner,
+      },
+      foundingDate: `${business.yearEstablished}`,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: business.address.street,
+        addressLocality: business.address.city,
+        addressRegion: business.address.state,
+        addressCountry: 'AE',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: business.coordinates.lat,
+        longitude: business.coordinates.lng,
+      },
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+          opens: '09:00',
+          closes: '23:45',
+        },
+      ],
+      areaServed: serviceAreas.map((area) => ({
+        '@type': 'City',
+        name: area.name,
+        containedInPlace: {
+          '@type': 'AdministrativeArea',
+          name: 'Abu Dhabi Emirate',
+        },
+      })),
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Auto Car Services',
+        itemListElement: serviceTypes.map((service) => ({
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: service.name,
+            description: service.shortDescription,
+          },
+        })),
+      },
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${business.website}/#webpage`,
+      url: business.website,
+      name: `${business.name} | Abu Dhabi Car Service`,
+      isPartOf: { '@id': `${business.website}/#website` },
+      about: { '@id': `${business.website}/#business` },
+      description: business.description,
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title={`${business.name} | Abu Dhabi Car Service Since 1999`}
+  description={business.description}
+  schema={schema}
+>
+  <!-- ============ HERO ============ -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-brand-900 to-brand-800">
+    <!-- Background hero image -->
+    <div class="absolute inset-0">
+      <img
+        src="/images/hero.webp"
+        alt="Al Sham Palace Auto Car Service Abu Dhabi"
+        class="h-full w-full object-cover opacity-20"
+        width="2048"
+        height="1024"
+        loading="eager"
+      />
+    </div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(245,166,35,0.15),_transparent_70%)]" />
+
+    <div class="relative mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+      <div class="max-w-2xl animate-fade-up">
+        <h1 class="font-display text-4xl text-white sm:text-5xl lg:text-6xl">
+          Abu Dhabi's Most Trusted Car Service Since 1999
+        </h1>
+        <p class="mt-6 text-lg leading-relaxed text-brand-200">
+          {business.tagline}. Car accessories, tyres, AC repair, mechanical &amp; electrical works, and mobile home service across all Abu Dhabi areas — backed by {years}+ years of experience.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href={business.phoneHref}
+            class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-brand-950 shadow-lg transition-all hover:bg-amber-400 hover:shadow-xl"
+          >
+            <Icon name="lucide:phone" class="size-5" />
+            Call {business.phone}
+          </a>
+          <a
+            href="https://wa.me/971503448933"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-all hover:bg-white/20"
+          >
+            <Icon name="lucide:message-circle" class="size-5" />
+            WhatsApp Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS BAR ============ -->
+  <section class="bg-brand-950">
+    <div class="mx-auto grid max-w-7xl grid-cols-2 gap-px sm:grid-cols-4">
+      {[
+        { icon: 'lucide:award', label: `${years}+ Years Experience` },
+        { icon: 'lucide:home', label: 'Home Service Available' },
+        { icon: 'lucide:clock', label: 'Open Daily 9AM–11:45PM' },
+        { icon: 'lucide:map-pin', label: 'All Abu Dhabi Areas' },
+      ].map((stat) => (
+        <div class="flex items-center justify-center gap-3 bg-brand-950 px-4 py-5">
+          <Icon name={stat.icon} class="size-5 shrink-0 text-amber-400" />
+          <span class="text-sm font-medium text-white">{stat.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ SERVICES GRID ============ -->
+  <section class="py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <h2 class="font-display text-3xl text-brand-900 sm:text-4xl">
+          Our Car Services in Abu Dhabi
+        </h2>
+        <p class="mx-auto mt-4 max-w-2xl text-stone-600">
+          From car accessories and tyres to AC repair, mechanical works, and mobile home service — we handle everything your car needs across all Abu Dhabi areas.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {serviceTypes.map((service, i) => (
+          <a
+            href={serviceUrl(service.slug)}
+            class={`card-hover group relative rounded-xl border border-stone-200 bg-white p-6 animate-fade-up stagger-${Math.min(i + 1, 6)}`}
+          >
+            {service.emergency && (
+              <span class="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700">
+                <Icon name="lucide:zap" class="size-3" />
+                24/7
+              </span>
+            )}
+            <div class="flex size-12 items-center justify-center rounded-lg bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-100">
+              <Icon name={service.icon} class="size-6" />
+            </div>
+            <h3 class="mt-4 font-display text-lg text-brand-900">
+              {service.name}
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-stone-600">
+              {service.shortDescription}
+            </p>
+            <p class="mt-3 text-sm font-semibold text-brand-700">
+              From AED {service.priceRange.min}
+            </p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW WE WORK ============ -->
+  <section class="bg-brand-950 py-16 lg:py-24" id="how-we-work">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <span class="inline-flex items-center gap-2 rounded-full bg-brand-900 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-brand-300">
+          <Icon name="lucide:settings" class="size-3.5" />
+          Simple Process
+        </span>
+        <h2 class="mt-4 font-display text-3xl text-white sm:text-4xl">
+          How We Work
+        </h2>
+        <p class="mx-auto mt-4 max-w-2xl text-brand-300">
+          From your first call to the job being done, we keep everything simple and transparent. Here is what to expect when you contact Al Sham Palace.
+        </p>
+      </div>
+
+      <div class="mt-14 lg:flex lg:gap-10">
+        <div class="flex gap-2 overflow-x-auto pb-4 lg:w-80 lg:shrink-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:pb-0">
+          {[
+            {
+              step: 1,
+              title: 'Call or WhatsApp',
+              icon: 'lucide:phone-call',
+              summary: 'Describe your car issue and we will advise the best solution.',
+              detail: 'Call or WhatsApp 050 344 8933. Tell us what your car needs — we will tell you the cost upfront and schedule a visit or home service at your convenience.',
+              image: '/images/hero.webp',
+            },
+            {
+              step: 2,
+              title: 'We Come to You',
+              icon: 'lucide:truck',
+              summary: 'Our mobile team arrives at your home, office, or our workshop.',
+              detail: 'For home service, our fully-equipped mobile technician arrives at your location across Abu Dhabi. For workshop jobs, bring your car to us in Mohamed Bin Zayed City.',
+              image: '/images/hero.webp',
+            },
+            {
+              step: 3,
+              title: 'Expert Service',
+              icon: 'lucide:wrench',
+              summary: 'Certified technicians fix your car right the first time.',
+              detail: 'Our experienced mechanics and technicians diagnose and resolve the issue using quality parts and proper tools. Most jobs are completed the same day.',
+              image: '/images/hero.webp',
+            },
+            {
+              step: 4,
+              title: 'Done & Delivered',
+              icon: 'lucide:check-circle',
+              summary: 'Your car is ready — with no hidden charges.',
+              detail: 'We test everything, explain what was done, and hand your car back in top condition. The price we quoted is the price you pay. No surprises, ever.',
+              image: '/images/hero.webp',
+            },
+          ].map((item, i) => (
+            <button
+              type="button"
+              class={`hww-tab group flex w-64 shrink-0 items-start gap-4 rounded-xl px-5 py-4 text-left transition-all lg:w-full ${i === 0 ? 'bg-brand-800/80 ring-1 ring-brand-600/40' : 'hover:bg-brand-900'}`}
+              data-step={item.step}
+              data-title={item.title}
+              data-detail={item.detail}
+              data-image={item.image}
+            >
+              <div class={`flex size-10 shrink-0 items-center justify-center rounded-lg transition-colors ${i === 0 ? 'bg-amber-500 text-brand-950' : 'bg-brand-800 text-brand-400 group-hover:bg-brand-700'}`}>
+                <Icon name={item.icon} class="size-5" />
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class={`text-xs font-bold ${i === 0 ? 'text-amber-400' : 'text-brand-500'}`}>Step {item.step}</span>
+                </div>
+                <h3 class={`mt-0.5 text-sm font-semibold ${i === 0 ? 'text-white' : 'text-brand-200'}`}>
+                  {item.title}
+                </h3>
+                <p class={`mt-1 text-xs leading-relaxed ${i === 0 ? 'text-brand-300' : 'text-brand-400'}`}>
+                  {item.summary}
+                </p>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div class="mt-8 flex-1 lg:mt-0">
+          <div class="relative overflow-hidden rounded-2xl">
+            <img
+              id="hww-image"
+              src="/images/hero.webp"
+              alt="Step 1: Call or WhatsApp"
+              class="h-64 w-full object-cover sm:h-80 lg:h-96 transition-opacity duration-300"
+              width="1408"
+              height="768"
+            />
+            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-950/90 via-brand-950/60 to-transparent px-6 pb-6 pt-20 sm:px-8 sm:pb-8 sm:pt-28">
+              <div class="flex items-center gap-3">
+                <span class="flex size-8 items-center justify-center rounded-full bg-amber-500 text-sm font-bold text-brand-950" id="hww-step-num">1</span>
+                <h3 class="font-display text-xl text-white sm:text-2xl" id="hww-title">Call or WhatsApp</h3>
+              </div>
+              <p class="mt-3 max-w-xl text-sm leading-relaxed text-brand-200 sm:text-base" id="hww-detail">
+                Call or WhatsApp 050 344 8933. Tell us what your car needs — we will tell you the cost upfront and schedule a visit or home service at your convenience.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center justify-center gap-2 lg:justify-start">
+            {[1, 2, 3, 4].map((n) => (
+              <button
+                type="button"
+                class={`hww-dot size-2.5 rounded-full transition-all ${n === 1 ? 'bg-amber-500 w-8' : 'bg-brand-700 hover:bg-brand-600'}`}
+                data-dot={n}
+                aria-label={`Go to step ${n}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.hww-tab');
+    const dots = document.querySelectorAll<HTMLButtonElement>('.hww-dot');
+    const image = document.getElementById('hww-image') as HTMLImageElement;
+    const stepNum = document.getElementById('hww-step-num');
+    const title = document.getElementById('hww-title');
+    const detail = document.getElementById('hww-detail');
+
+    function activateStep(step: number) {
+      const tab = Array.from(tabs).find(t => Number(t.dataset.step) === step);
+      if (!tab || !image || !stepNum || !title || !detail) return;
+
+      tabs.forEach(t => {
+        const isActive = t === tab;
+        t.classList.toggle('bg-brand-800/80', isActive);
+        t.classList.toggle('ring-1', isActive);
+        t.classList.toggle('ring-brand-600/40', isActive);
+        t.classList.toggle('hover:bg-brand-900', !isActive);
+
+        const icon = t.querySelector('div:first-child') as HTMLElement;
+        if (icon) {
+          icon.classList.toggle('bg-amber-500', isActive);
+          icon.classList.toggle('text-brand-950', isActive);
+          icon.classList.toggle('bg-brand-800', !isActive);
+          icon.classList.toggle('text-brand-400', !isActive);
+          icon.classList.toggle('group-hover:bg-brand-700', !isActive);
+        }
+
+        const stepLabel = t.querySelector('span:first-of-type') as HTMLElement;
+        if (stepLabel) {
+          stepLabel.classList.toggle('text-amber-400', isActive);
+          stepLabel.classList.toggle('text-brand-500', !isActive);
+        }
+
+        const h3 = t.querySelector('h3') as HTMLElement;
+        if (h3) {
+          h3.classList.toggle('text-white', isActive);
+          h3.classList.toggle('text-brand-200', !isActive);
+        }
+
+        const p = t.querySelector('p') as HTMLElement;
+        if (p) {
+          p.classList.toggle('text-brand-300', isActive);
+          p.classList.toggle('text-brand-400', !isActive);
+        }
+      });
+
+      dots.forEach(d => {
+        const isActive = Number(d.dataset.dot) === step;
+        d.classList.toggle('bg-amber-500', isActive);
+        d.classList.toggle('w-8', isActive);
+        d.classList.toggle('bg-brand-700', !isActive);
+      });
+
+      image.style.opacity = '0';
+      setTimeout(() => {
+        image.src = tab.dataset.image || '';
+        image.alt = `Step ${step}: ${tab.dataset.title}`;
+        image.style.opacity = '1';
+      }, 150);
+
+      stepNum.textContent = String(step);
+      title.textContent = tab.dataset.title || '';
+      detail.textContent = tab.dataset.detail || '';
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => activateStep(Number(tab.dataset.step)));
+    });
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => activateStep(Number(dot.dataset.dot)));
+    });
+
+    let currentStep = 1;
+    let autoTimer = setInterval(() => {
+      currentStep = currentStep >= 4 ? 1 : currentStep + 1;
+      activateStep(currentStep);
+    }, 6000);
+
+    const section = document.getElementById('how-we-work');
+    section?.addEventListener('click', () => {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(() => {
+        currentStep = currentStep >= 4 ? 1 : currentStep + 1;
+        activateStep(currentStep);
+      }, 15000);
+    });
+  </script>
+
+  <!-- ============ REVIEWS STRIP ============ -->
+  <section class="border-y border-stone-200/60 bg-white py-14 lg:py-20">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-display text-2xl text-brand-900 sm:text-3xl">
+            What Our Customers Say
+          </h2>
+          <div class="mt-2 flex items-center gap-2">
+            <div class="flex items-center gap-0.5">
+              {[1, 2, 3, 4, 5].map(() => (
+                <Icon name="lucide:star" class="size-5 fill-amber-400 text-amber-400" />
+              ))}
+            </div>
+            <span class="text-sm font-medium text-stone-600">
+              {(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)} average from {reviews.length} reviews
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8 flex gap-5 overflow-x-auto px-5 pb-4 lg:px-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div class="mx-auto flex max-w-7xl gap-5">
+        {reviews.map((review) => (
+          <div class="w-80 shrink-0 rounded-xl border border-stone-200/60 bg-stone-50 p-6">
+            <div class="flex items-center gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Icon
+                  name="lucide:star"
+                  class={`size-4 ${i < Math.floor(review.rating) ? 'fill-amber-400 text-amber-400' : 'text-stone-200'}`}
+                />
+              ))}
+            </div>
+            <p class="mt-3 text-sm leading-relaxed text-stone-600 line-clamp-4">
+              "{review.text}"
+            </p>
+            <div class="mt-4 flex items-center gap-3">
+              <div class="flex size-9 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-700">
+                {review.author.charAt(0)}
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-stone-800">{review.author}</p>
+                <p class="text-xs text-stone-400">{new Date(review.date).toLocaleDateString('en-AE', { month: 'short', year: 'numeric' })}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AREAS SECTION ============ -->
+  <section class="bg-stone-100 py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="text-center">
+        <h2 class="font-display text-3xl text-brand-900 sm:text-4xl">
+          Areas We Serve in Abu Dhabi
+        </h2>
+        <p class="mx-auto mt-4 max-w-2xl text-stone-600">
+          Proudly serving all of {business.serviceRadius} with fast response times and reliable car service — including mobile home service.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {serviceAreas.map((area, i) => (
+          <a
+            href={areaUrl(area.slug)}
+            class={`card-hover group rounded-xl border border-stone-200 bg-white p-6 animate-fade-up stagger-${Math.min(i + 1, 6)}`}
+          >
+            <div class="flex items-center gap-3">
+              <Icon name="lucide:map-pin" class="size-5 text-brand-600" />
+              <h3 class="font-display text-lg text-brand-900">{area.name}</h3>
+            </div>
+            <p class="mt-1 text-sm text-stone-500">{area.county}</p>
+            <div class="mt-3 flex items-center gap-1.5 text-sm text-stone-600">
+              <Icon name="lucide:clock" class="size-4 text-brand-500" />
+              <span>{area.responseTime} response</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA BANNER ============ -->
+  <section class="bg-brand-900">
+    <div class="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
+      <div class="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div>
+          <h2 class="font-display text-3xl text-white">Need Car Service in Abu Dhabi?</h2>
+          <p class="mt-2 text-brand-200">
+            Call us now or WhatsApp — we come to you. Open daily 9AM to 11:45PM across all Abu Dhabi areas.
+          </p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-4">
+          <a
+            href={business.phoneHref}
+            class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-brand-950 shadow-lg transition-all hover:bg-amber-400"
+          >
+            <Icon name="lucide:phone" class="size-5" />
+            {business.phone}
+          </a>
+          <a
+            href={contactUrl()}
+            class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20"
+          >
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

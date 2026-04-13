@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+import { business } from '../../data/business';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+
+const categoryColors: Record<string, string> = {
+  emergency: 'bg-red-50 text-red-700 ring-red-200/60',
+  tips: 'bg-brand-50 text-brand-700 ring-brand-200/60',
+  maintenance: 'bg-amber-50 text-amber-700 ring-amber-200/60',
+  news: 'bg-stone-100 text-stone-600 ring-stone-200/60',
+};
+---
+
+<BaseLayout
+  title={`Car Care Blog Abu Dhabi | ${business.name}`}
+  description={`Car care tips, tyre advice, AC maintenance guides, and auto service insights for Abu Dhabi car owners from ${business.name} — trusted since ${business.yearEstablished}.`}
+>
+  <Breadcrumbs crumbs={[{ label: 'Blog' }]} />
+
+  <!-- ============ HEADER ============ -->
+  <section class="py-12 lg:py-16">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="max-w-3xl animate-fade-up">
+        <h1 class="font-display text-4xl text-brand-900 sm:text-5xl">
+          Car Care Tips for Abu Dhabi Drivers
+        </h1>
+        <p class="mt-4 text-lg leading-relaxed text-stone-600">
+          Expert advice from Abu Dhabi's most trusted auto care team since {business.yearEstablished}. Tips on tyres, AC repair, car accessories, and more.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ POSTS GRID ============ -->
+  <section class="pb-16 lg:pb-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      {posts.length === 0 ? (
+        <p class="text-center text-stone-500 py-12">Blog posts coming soon…</p>
+      ) : (
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post, i) => (
+            <a
+              href={`/blog/${post.id}/`}
+              class={`card-hover group rounded-xl border border-stone-200 bg-white overflow-hidden animate-fade-up stagger-${Math.min(i + 1, 6)}`}
+            >
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-3">
+                  <span class={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ring-1 ${categoryColors[post.data.category] ?? 'bg-stone-100 text-stone-600 ring-stone-200/60'}`}>
+                    {post.data.category}
+                  </span>
+                  <time class="text-xs text-stone-400" datetime={post.data.publishDate}>
+                    {new Date(post.data.publishDate).toLocaleDateString('en-AE', { year: 'numeric', month: 'short', day: 'numeric' })}
+                  </time>
+                </div>
+
+                <h2 class="font-display text-lg text-brand-900 group-hover:text-brand-700 leading-snug">
+                  {post.data.title}
+                </h2>
+
+                <p class="mt-2 text-sm leading-relaxed text-stone-500 line-clamp-3">
+                  {post.data.description}
+                </p>
+
+                {post.data.readingTime && (
+                  <p class="mt-3 flex items-center gap-1.5 text-xs text-stone-400">
+                    <Icon name="lucide:clock" class="size-3.5" />
+                    {post.data.readingTime}
+                  </p>
+                )}
+
+                <p class="mt-4 text-sm font-semibold text-brand-700 group-hover:underline">
+                  Read more →
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="bg-brand-900">
+    <div class="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
+      <div class="flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div>
+          <h2 class="font-display text-3xl text-white">Need Car Service in Abu Dhabi?</h2>
+          <p class="mt-2 text-brand-200">
+            Call or WhatsApp {business.name} for fast, professional service anywhere in Abu Dhabi.
+          </p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-4">
+          <a
+            href={business.phoneHref}
+            class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-6 py-3 text-sm font-semibold text-brand-950 shadow-lg transition-all hover:bg-amber-400"
+          >
+            <Icon name="lucide:phone" class="size-5" />
+            {business.phone}
+          </a>
+          <a
+            href="https://wa.me/971503448933"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20"
+          >
+            WhatsApp Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

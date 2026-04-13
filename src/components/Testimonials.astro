@@ -1,0 +1,66 @@
+---
+import { business } from '../data/business';
+---
+
+<section class="py-16 bg-[#f9f9f9]">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="section-title">
+        <span data-en>What Our Customers Say</span>
+        <span data-ar style="display:none">ماذا يقول عملاؤنا</span>
+      </h2>
+      <div class="gold-bar mx-auto mt-3"></div>
+      <p class="section-subtitle mt-4">
+        <span data-en>Trusted by thousands of Abu Dhabi car owners since 1999</span>
+        <span data-ar style="display:none">موثوق لدى آلاف أصحاب السيارات في أبوظبي منذ 1999</span>
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {business.reviews.map((review) => (
+        <div class="card p-6">
+          <!-- Stars -->
+          <div class="flex gap-1 mb-3">
+            {Array.from({ length: review.rating }).map(() => (
+              <span class="text-[#f5a623] text-lg">★</span>
+            ))}
+          </div>
+          <!-- Review text -->
+          <p class="text-gray-700 text-sm leading-relaxed mb-4 italic">
+            <span data-en>"{review.text}"</span>
+            <span data-ar style="display:none">"{review.textAr}"</span>
+          </p>
+          <!-- Author -->
+          <div class="flex items-center gap-3 pt-3 border-t border-gray-100">
+            <div class="w-9 h-9 rounded-full bg-[#f5a623] flex items-center justify-center text-black font-bold text-sm shrink-0">
+              {review.author.charAt(0)}
+            </div>
+            <div>
+              <p class="font-semibold text-sm text-gray-900">{review.author}</p>
+              <p class="text-xs text-gray-500">
+                <span data-en>Google Review</span>
+                <span data-ar style="display:none">تقييم جوجل</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Overall rating -->
+    <div class="mt-10 text-center">
+      <div class="inline-flex items-center gap-3 bg-white rounded-xl px-6 py-4 shadow-md">
+        <span class="text-3xl font-extrabold text-[#f5a623]">5.0</span>
+        <div>
+          <div class="flex gap-0.5">
+            {Array.from({ length: 5 }).map(() => <span class="text-[#f5a623] text-xl">★</span>)}
+          </div>
+          <p class="text-xs text-gray-500 mt-0.5">
+            <span data-en>Based on Google Reviews</span>
+            <span data-ar style="display:none">بناءً على تقييمات جوجل</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection, render } from 'astro:content';
+import { business } from '../../data/business';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.publishDate,
+  author: {
+    '@type': 'Organization',
+    name: business.name,
+    url: business.website,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: business.name,
+    url: business.website,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${business.website}/images/logo.webp`,
+    },
+  },
+};
+---
+
+<BaseLayout
+  title={`${post.data.title} | ${business.name}`}
+  description={post.data.description}
+  schema={schema}
+>
+  <Breadcrumbs
+    crumbs={[
+      { label: 'Blog', href: '/blog/' },
+      { label: post.data.title },
+    ]}
+  />
+
+  <article class="mx-auto max-w-3xl px-5 py-12 lg:px-8 lg:py-16">
+    <!-- Meta -->
+    <div class="mb-6 flex flex-wrap items-center gap-3">
+      <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700 ring-1 ring-brand-200/60">
+        {post.data.category}
+      </span>
+      <time class="flex items-center gap-1.5 text-sm text-stone-400" datetime={post.data.publishDate}>
+        <Icon name="lucide:calendar" class="size-4" />
+        {new Date(post.data.publishDate).toLocaleDateString('en-AE', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+      {post.data.readingTime && (
+        <span class="flex items-center gap-1.5 text-sm text-stone-400">
+          <Icon name="lucide:clock" class="size-4" />
+          {post.data.readingTime}
+        </span>
+      )}
+    </div>
+
+    <!-- Title -->
+    <h1 class="font-display text-3xl text-brand-900 sm:text-4xl lg:text-5xl leading-tight">
+      {post.data.title}
+    </h1>
+
+    <p class="mt-4 text-lg leading-relaxed text-stone-600">
+      {post.data.description}
+    </p>
+
+    <!-- Author -->
+    <div class="mt-6 flex items-center gap-3 border-b border-stone-200 pb-8">
+      <div class="flex size-10 items-center justify-center rounded-full bg-brand-100">
+        <Icon name="lucide:user" class="size-5 text-brand-700" />
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-stone-800">{post.data.author}</p>
+        <p class="text-xs text-stone-500">Serving Abu Dhabi since {business.yearEstablished}</p>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="prose prose-stone prose-lg mt-8 max-w-none prose-headings:font-display prose-headings:text-brand-900 prose-a:text-brand-700 prose-a:no-underline hover:prose-a:underline prose-strong:text-stone-900">
+      <Content />
+    </div>
+
+    <!-- Tags -->
+    {post.data.tags.length > 0 && (
+      <div class="mt-10 flex flex-wrap gap-2 border-t border-stone-200 pt-8">
+        {post.data.tags.map((tag) => (
+          <span class="rounded-full bg-stone-100 px-3 py-1 text-xs text-stone-600">
+            {tag}
+          </span>
+        ))}
+      </div>
+    )}
+
+    <!-- CTA -->
+    <div class="mt-10 rounded-xl bg-brand-900 p-8 text-center">
+      <h2 class="font-display text-xl text-white sm:text-2xl">
+        Need Car Service in Abu Dhabi?
+      </h2>
+      <p class="mt-2 text-brand-200 text-sm">
+        {business.name} — professional car service across Abu Dhabi since {business.yearEstablished}.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-4">
+        <a
+          href={business.phoneHref}
+          class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-semibold text-brand-950 shadow transition-all hover:bg-amber-400"
+        >
+          <Icon name="lucide:phone" class="size-4" />
+          {business.phone}
+        </a>
+        <a
+          href="https://wa.me/971503448933"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/20"
+        >
+          WhatsApp Us
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

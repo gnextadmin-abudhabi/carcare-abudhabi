@@ -1,0 +1,48 @@
+---
+// No props needed - JS handles language toggling
+---
+
+<button
+  id="lang-toggle"
+  class="lang-btn"
+  aria-label="Toggle Arabic/English language"
+  title="Switch to Arabic / التبديل إلى العربية"
+>
+  <span id="lang-icon">🌐</span>
+  <span id="lang-label">عربي</span>
+</button>
+
+<script>
+  const toggle = document.getElementById('lang-toggle');
+  const labelEl = document.getElementById('lang-label');
+
+  // Restore preference on load
+  const saved = localStorage.getItem('lang') ?? 'en';
+  applyLang(saved);
+
+  toggle?.addEventListener('click', () => {
+    const current = document.documentElement.lang || 'en';
+    const next = current === 'en' ? 'ar' : 'en';
+    applyLang(next);
+    localStorage.setItem('lang', next);
+  });
+
+  function applyLang(lang: string) {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+    if (labelEl) {
+      labelEl.textContent = lang === 'ar' ? 'English' : 'عربي';
+    }
+
+    // Show/hide content blocks
+    document.querySelectorAll('[data-en]').forEach((el) => {
+      const htmlEl = el as HTMLElement;
+      htmlEl.style.display = lang === 'en' ? '' : 'none';
+    });
+    document.querySelectorAll('[data-ar]').forEach((el) => {
+      const htmlEl = el as HTMLElement;
+      htmlEl.style.display = lang === 'ar' ? '' : 'none';
+    });
+  }
+</script>

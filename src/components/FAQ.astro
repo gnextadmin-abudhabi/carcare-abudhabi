@@ -1,0 +1,88 @@
+---
+interface FaqItem {
+  q: string;
+  qAr: string;
+  a: string;
+  aAr: string;
+}
+
+interface Props {
+  faqs: FaqItem[];
+  schema?: boolean;
+}
+
+const { faqs, schema = true } = Astro.props;
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.a,
+    },
+  })),
+};
+---
+
+{schema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+
+<section class="py-14 bg-white">
+  <div class="max-w-3xl mx-auto px-4">
+    <div class="text-center mb-10">
+      <h2 class="section-title">
+        <span data-en>Frequently Asked Questions</span>
+        <span data-ar style="display:none">الأسئلة الشائعة</span>
+      </h2>
+      <div class="gold-bar mx-auto mt-3"></div>
+    </div>
+
+    <div class="space-y-3" id="faq-list">
+      {faqs.map((faq, i) => (
+        <div class="border border-gray-200 rounded-xl overflow-hidden">
+          <button
+            class="faq-btn w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+            data-index={i}
+            aria-expanded="false"
+          >
+            <span>
+              <span data-en>{faq.q}</span>
+              <span data-ar style="display:none">{faq.qAr}</span>
+            </span>
+            <svg class="faq-icon w-5 h-5 shrink-0 text-[#f5a623] transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="faq-answer hidden px-5 pb-4 text-gray-600 text-sm leading-relaxed">
+            <span data-en>{faq.a}</span>
+            <span data-ar style="display:none">{faq.aAr}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.faq-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const answer = btn.nextElementSibling as HTMLElement;
+      const icon = btn.querySelector('.faq-icon') as HTMLElement;
+      const isOpen = !answer.classList.contains('hidden');
+
+      // Close all
+      document.querySelectorAll('.faq-answer').forEach((a) => a.classList.add('hidden'));
+      document.querySelectorAll('.faq-icon').forEach((ic) => (ic as HTMLElement).style.transform = '');
+      document.querySelectorAll('.faq-btn').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+
+      // Open clicked if it was closed
+      if (!isOpen) {
+        answer.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
