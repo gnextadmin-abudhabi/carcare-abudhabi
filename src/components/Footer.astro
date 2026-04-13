@@ -164,11 +164,18 @@ import { serviceUrl, areaUrl } from '../lib/urls';
     </div>
 
     <!-- Bottom bar -->
-    <div class="mt-14 flex flex-col items-center justify-between gap-3 border-t border-white/6 pt-7 text-xs text-stone-600 sm:flex-row">
-      <p>&copy; {new Date().getFullYear()} {business.name}. All rights reserved.</p>
-      <div class="flex items-center gap-4">
-        <p>Mohamed Bin Zayed City, Abu Dhabi, UAE · Since {business.yearEstablished}</p>
-        <a href="/privacy/" class="hover:text-stone-400 transition-colors">Privacy Policy</a>
+    <div class="mt-14 border-t border-white/6 pt-7">
+      <div class="flex flex-col items-center justify-between gap-3 text-xs text-stone-600 sm:flex-row">
+        <p>&copy; {new Date().getFullYear()} {business.name}. All rights reserved.</p>
+        <div class="flex items-center gap-4">
+          <!-- Social links -->
+          <a href="https://www.instagram.com/al_sham_palace1/" target="_blank" rel="noopener noreferrer" class="hover:text-brand-400 transition-colors">Instagram</a>
+          <a href="https://www.tiktok.com/@alsham.palace1" target="_blank" rel="noopener noreferrer" class="hover:text-brand-400 transition-colors">TikTok</a>
+          <a href="/privacy/" class="hover:text-stone-400 transition-colors">Privacy Policy</a>
+        </div>
+      </div>
+      <div class="mt-3 text-center text-xs text-stone-700">
+        Powered by <a href="https://www.gxlocate.com" target="_blank" rel="noopener noreferrer" class="hover:text-stone-500 transition-colors">www.gxlocate.com</a>
       </div>
     </div>
   </div>

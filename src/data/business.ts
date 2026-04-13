@@ -57,7 +57,7 @@ export const business: Business = {
     'Al Sham Palace Auto Car Service is Abu Dhabi\'s most trusted full-service auto care centre, operating since 1999. We provide car accessories, tyre services, AC repair, mechanical and electrical works, and mobile home service across all Abu Dhabi areas.',
   phone: '050 344 8933',
   phoneHref: 'tel:+971503448933',
-  email: 'alshamcarcare@gmail.com',
+  email: 'info@carcareabudhabi.com',
   website: 'https://carcareabudhabi.com',
   license: 'Abu Dhabi Trade License',
   yearEstablished: 1999,
