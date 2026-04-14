@@ -3,7 +3,7 @@
 
 @theme {
   /* ── Typography ────────────────────────────────── */
-  --font-display: 'Syne', sans-serif;
+  --font-display: 'Inter', sans-serif;
   --font-body:    'Inter', sans-serif;
   --font-arabic:  'Cairo', sans-serif;
 
