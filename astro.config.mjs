@@ -17,7 +17,7 @@ export default defineConfig({
       changefreq: 'weekly',
       serialize(item) {
         // Dynamic priority: homepage highest, deep combo pages lowest
-        const depth = item.url.replace('https://carcarabudhabi.com/', '').split('/').filter(Boolean).length;
+        const depth = item.url.replace('https://carcareabudhabi.com/', '').split('/').filter(Boolean).length;
         if (depth === 0) item.priority = 1.0;           // homepage
         else if (depth === 1) item.priority = 0.9;       // /services/, /areas/, /contact/
         else if (depth === 2) item.priority = 0.7;       // /services/car-ac-repair/
