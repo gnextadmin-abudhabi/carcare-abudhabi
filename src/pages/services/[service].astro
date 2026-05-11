@@ -34,9 +34,10 @@ const schema = {
   name: service.name,
   description: service.description,
   provider: {
-    '@type': 'AutoRepair',
+    '@type': ['AutoRepair', 'LocalBusiness'],
+    '@id': `${business.website}/#business`,
     name: business.name,
-    telephone: business.phone,
+    telephone: '+971503448933',
     url: business.website,
     address: {
       '@type': 'PostalAddress',
@@ -45,6 +46,18 @@ const schema = {
       addressRegion: business.address.state,
       addressCountry: 'AE',
     },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: business.coordinates.lat,
+      longitude: business.coordinates.lng,
+    },
+    openingHoursSpecification: [{
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+      opens: '09:00',
+      closes: '23:45',
+    }],
+    priceRange: '$$',
   },
   areaServed: serviceAreas.map((area) => ({
     '@type': 'City',

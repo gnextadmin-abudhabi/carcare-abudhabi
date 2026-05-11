@@ -36,8 +36,8 @@ const years = yearsInBusiness();
 const nearbyAreas = getNearbyAreas(area);
 const nearbyNames = nearbyAreas.map((a) => a.name).join(', ');
 
-const pageTitle = `${service.name} in ${area.name} | Abu Dhabi`;
-const pageDescription = `Professional ${service.name.toLowerCase()} in ${area.name}, Abu Dhabi. ${area.responseTime} response. Free estimates. Call ${business.phone}.`;
+const pageTitle = `${service.name} in ${area.name} | Al Sham Palace`;
+const pageDescription = `Professional ${service.name.toLowerCase()} in ${area.name}, Abu Dhabi. ${area.responseTime} response. Free estimates. Trusted since 1999. Call ${business.phone}.`;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -48,7 +48,7 @@ const schema = {
       name: `${service.name} in ${area.name}`,
       description: `${service.description} Serving ${area.name}, Abu Dhabi and surrounding communities.`,
       provider: {
-        '@type': 'AutoRepair',
+        '@type': ['AutoRepair', 'LocalBusiness'],
         '@id': `${business.website}/#business`,
         name: business.name,
         telephone: business.phone,

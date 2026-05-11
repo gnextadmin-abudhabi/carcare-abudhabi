@@ -26,27 +26,29 @@ const { area } = Astro.props;
 
 const nearbyAreas = getNearbyAreas(area);
 
-const pageTitle = `Car Service in ${area.name}, Abu Dhabi`;
+const pageTitle = `${area.name} Car Service | Al Sham Palace`;
 const metaDescription = `Professional car service in ${area.name}, Abu Dhabi. AC repair, tyres, accessories, mechanical work & home service. ${area.responseTime} response.`;
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': 'AutoRepair',
+  '@type': ['AutoRepair', 'LocalBusiness'],
+  '@id': `${business.website}/#business`,
   name: business.name,
   description: `${business.name} provides professional car services in ${area.name}, Abu Dhabi.`,
-  telephone: business.phone,
+  telephone: '+971503448933',
   url: business.website,
+  image: `${business.website}${business.logo}`,
   address: {
     '@type': 'PostalAddress',
     streetAddress: business.address.street,
-    addressLocality: area.name,
+    addressLocality: business.address.city,
     addressRegion: 'Abu Dhabi',
     addressCountry: 'AE',
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: area.lat,
-    longitude: area.lng,
+    latitude: business.coordinates.lat,
+    longitude: business.coordinates.lng,
   },
   areaServed: [
     {
@@ -58,13 +60,13 @@ const schema = {
       name: 'Abu Dhabi Emirate',
     },
   ],
-  openingHoursSpecification: business.hours.map((h) => ({
+  openingHoursSpecification: [{
     '@type': 'OpeningHoursSpecification',
-    dayOfWeek: h.days,
+    dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
     opens: '09:00',
     closes: '23:45',
-  })),
-  priceRange: 'AED',
+  }],
+  priceRange: '$$',
 };
 ---
 

@@ -49,7 +49,7 @@ const schema = {
       email: business.email,
       description: business.description,
       foundingDate: `${business.yearEstablished}`,
-      priceRange: 'AED',
+      priceRange: '$$',
       currenciesAccepted: 'AED',
       paymentAccepted: 'Cash, Credit Card, Debit Card',
       address: {
@@ -146,7 +146,7 @@ const statsData = [
 
 <BaseLayout
   title={`Car Service Abu Dhabi | ${business.shortName} Since ${business.yearEstablished}`}
-  description={business.description}
+  description={`Abu Dhabi's trusted car service since 1999. Accessories, tyres, AC repair, mechanical & electrical works, home service. Open daily 9AM–11:45PM.`}
   schema={schema}
 >
 
